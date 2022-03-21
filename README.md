@@ -24,3 +24,8 @@ npm run server
 // 터미널 2: 클라이언트
 npm run dev
 ```
+
+## 개발문서 확인 방법
+
+swagger를 이용함
+서버가 실행된 상태에서 [브라우저로 접속](http://127.0.0.1:3001/swagger/)
