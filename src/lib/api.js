@@ -28,30 +28,35 @@ const test = async (name) => {
 const booksMockup = async () => {
     const books = [
         {
+            id: 0,
             image: 'https://image.aladin.co.kr/product/29045/74/cover500/k192836746_2.jpg',
             title: '불편한 편의점',
             author: '김호연',
             publisher: '나무옆의자',
         },
         {
+            id: 1,
             image: 'https://image.aladin.co.kr/product/29045/74/cover500/k192836746_2.jpg',
             title: '불편한 편의점',
             author: '김호연',
             publisher: '나무옆의자',
         },
         {
+            id: 2,
             image: 'https://image.aladin.co.kr/product/29045/74/cover500/k192836746_2.jpg',
             title: '불편한 편의점',
             author: '김호연',
             publisher: '나무옆의자',
         },
         {
+            id: 3,
             image: 'https://image.aladin.co.kr/product/29045/74/cover500/k192836746_2.jpg',
             title: '불편한 편의점',
             author: '김호연',
             publisher: '나무옆의자',
         },
         {
+            id: 4,
             image: 'https://image.aladin.co.kr/product/29045/74/cover500/k192836746_2.jpg',
             title: '불편한 편의점',
             author: '김호연',
@@ -61,8 +66,22 @@ const booksMockup = async () => {
     return books
 }
 
+const bookDetailMockup = async () => {
+    const book = {
+            id: 0,
+            image: 'https://image.aladin.co.kr/product/29045/74/cover500/k192836746_2.jpg',
+            title: '불편한 편의점',
+            author: '김호연',
+            publisher: '나무옆의자',
+            intro: '설명 별로 안긴거',
+            desc: '설명 완전 긴거',
+            keyword: ['키워드1', '키워드2', '키워드3']
+        }
+    return book
+}
+
 export {
     api,
     test,
-    booksMockup
+    booksMockup, bookDetailMockup
 }

@@ -1,9 +1,3 @@
-<script>
-import { test } from '../lib/api'
-
-const init = test('noye')
-</script>
-
 <h1>Booka Gazua~~~</h1>
 {#await init}
     <p>waiting..</p>
@@ -12,3 +6,9 @@ const init = test('noye')
 {:catch error}
     <p>error: {error.message}</p>
 {/await}
+
+<script>
+    import { test } from '../lib/api'
+
+    const init = test('noye')
+</script>

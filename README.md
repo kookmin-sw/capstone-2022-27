@@ -29,3 +29,26 @@ npm run dev
 
 swagger를 이용함
 서버가 실행된 상태에서 [브라우저로 접속](http://127.0.0.1:3001/swagger/)
+
+## 컨벤션
+
+### 프론트
+
+```svelte
+<ul>
+    <li>indent: 4 space</li>
+    <li>html, script, style 순서로 배치하기</li>
+    <li>각 부분 사이에 한 줄 공백 넣기, script와 style은 1 indent</li>
+</ul>
+
+<script>
+    let var1 = "let, const 등 ecmascript 사용"
+    const var2 = "세미콜론 사용하지 않기"
+</script>
+
+<style>
+    div {
+        color: red;
+    }
+</style>
+```
