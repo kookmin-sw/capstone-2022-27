@@ -1,20 +1,19 @@
-import adapter from '@sveltejs/adapter-auto';
+import adapter from '@sveltejs/adapter-static';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
 	kit: {
-		adapter: adapter(),
-		vite: () => ({
-			server: {
-				proxy: {
-					'/api/': {
-						target: 'http://127.0.0.1:3001',
-						secure: false,
-						changeOrigin: true,
-					}
-				}
-			}
-		})
+		adapter: adapter({
+			pages: 'dist',
+			assets: 'static',
+			fallback: null,
+			precompress: false
+		}),
+
+		prerender: {
+			default: true
+		},
+		vite: () => ({})
 	}
 }
 

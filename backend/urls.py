@@ -53,7 +53,5 @@ else:
     urlpatterns = []
     
 urlpatterns += [
-    path('', index_view, name='index'),
     path('api/', include('backend.api.urls')),
-    re_path(r'.+', index_view, name='index'),
 ]

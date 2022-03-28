@@ -1,5 +1,7 @@
 import axios from 'axios'
 
+const BASEURL = import.meta.env.VITE_API_URL
+
 const safe_return = async (promise) => {
     try {
         const res = await promise
@@ -16,7 +18,7 @@ const safe_return = async (promise) => {
 }
 
 const api = async (url, params) => {
-    const promise = axios.get(`/api/${url}`, {params: params})
+    const promise = axios.get(`{BASEURL}/api/${url}`, {params: params})
     return safe_return(promise)
 }
 
