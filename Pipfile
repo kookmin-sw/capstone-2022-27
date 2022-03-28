@@ -13,6 +13,7 @@ Django = "==3.2.7"
 drf-yasg = "*"
 djangorestframework = "*"
 mysqlclient = "*"
+django-cors-headers = "*"
 
 [dev-packages]
 
