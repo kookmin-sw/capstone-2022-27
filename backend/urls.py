@@ -31,9 +31,9 @@ schema_url_patterns = [
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="조명빨 api",
+        title="Booka api",
         default_version='v1',
-        description="조명빨 api",
+        description="Booka api",
         terms_of_service="https://www.google.com/policies/terms/",
     ),
     public=True,
