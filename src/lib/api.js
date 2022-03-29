@@ -18,7 +18,7 @@ const safe_return = async (promise) => {
 }
 
 const api = async (url, params) => {
-    const promise = axios.get(`{BASEURL}/api/${url}`, {params: params})
+    const promise = axios.get(`${BASEURL}/api/${url}`, {params: params})
     return safe_return(promise)
 }
 
