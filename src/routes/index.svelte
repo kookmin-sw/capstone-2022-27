@@ -1,24 +1,32 @@
 <div class="content">
-    <h1>Booka Gazua~</h1>
-    <Card className="row">
-        {#await init}
-            <p>waiting..</p>
-        {:then books}
-            {#each books as book}
-                <a href={`./book/${book.id}`}><BookSmall image={book.image} title={book.title} /></a>
-            {/each}
-        {:catch error}
-            <p>error: {error.message}</p>
-        {/await}
-    </Card>
+
+    {#await initBanner}
+        <p>loading..</p>
+    {:then banner}
+        <Banner img={banner.image} desc={banner.desc} 
+        keywords={banner.keyword} bgColor = {banner.bgColor} />
+    {/await}
+    
+    
+    {#await init}
+        <p>waiting..</p>
+    {:then recoms}
+        {#each recoms as recom}
+            <div><RecomList recom={recom}/></div>
+        {/each}
+    {:catch error}
+        <p>error: {error.message}</p>
+    {/await}
+
 </div>
 
 <script>
-    import BookSmall from '$lib/components/BookSmall.svelte'
-    import Card from '$lib/components/Card.svelte'
-    import { booksMockup } from '../lib/api'
+    import Banner from '$lib/components/Banner.svelte'
+    import RecomList from '$lib/components/RecomList.svelte'
+    import { mainBannerMockup, recomsMockup } from '../lib/api'
     
-    const init = booksMockup()
+    const init = recomsMockup()
+    const initBanner=  mainBannerMockup()
 </script>
 
 <style>
