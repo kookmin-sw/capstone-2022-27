@@ -1,19 +1,57 @@
 from .api import res, api, P
-from ..models import Book
+from django.db.models import F, Count
+from ..models import Book, User, Review
+from ..serializer import BookSerializer, BookSimpleSerializer, BookDetailSerializer
+
+def random_books(count=10):
+    return Book.objects.annotate(num_reviews=Count('reviews')).order_by('num_reviews')[:count]
 
 @api(
-    name="책 테스트 API",
+    name="책 상세",
     method='GET',
     params=[
-        P('test', t='string', desc='아무 의미 없는 인자'),
+        P('id', t='integer', desc='책의 id'),
     ],
-    responses={
-        0: "[Book, Book, Book...]",
+    response=BookDetailSerializer,
+    errors={
         1: '알 수 없는 에러',
     }
 )
-def test(req, name:str):
-    book = {
-        
+def detail(req, id:int):
+    book = Book.objects.get(id=id)
+
+    data = {
+        'book': BookSerializer(book).data,
+        'similar': BookSimpleSerializer(random_books(), many=True).data,
+        'keywords': ['인기', '누구나']
     }
-    return res(f'Hello, {name}!')
+    data_s = BookDetailSerializer(data=data)
+    data_s.book = book
+    if not data_s.is_valid():
+        print(data_s.errors)
+        return res(code=2)
+    return res(data_s.data)
+
+@api(
+    name="책 추천",
+    method='GET',
+    params=[
+        P('id', t='integer', desc='책의 id'),
+    ],
+    response=BookDetailSerializer,
+    errors={1: '알 수 없는 에러',}
+)
+def detail(req, id:int):
+    book = Book.objects.get(id=id)
+
+    data = {
+        'book': BookSerializer(book).data,
+        'similar': BookSimpleSerializer(random_books(), many=True).data,
+        'keywords': ['인기', '누구나']
+    }
+    data_s = BookDetailSerializer(data=data)
+    data_s.book = book
+    if not data_s.is_valid():
+        print(data_s.errors)
+        return res(code=2)
+    return res(data_s.data)

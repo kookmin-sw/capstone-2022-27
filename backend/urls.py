@@ -51,7 +51,7 @@ if settings.DEBUG:
     ]
 else:
     urlpatterns = []
-    
+
 urlpatterns += [
     path('api/', include('backend.api.urls')),
 ]
