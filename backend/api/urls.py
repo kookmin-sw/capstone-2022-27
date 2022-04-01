@@ -1,7 +1,7 @@
 from django.urls import path
 
-from .views import base
+from .views import base, book
 
 urlpatterns = [
-    path('test', base.test),
+    path('book/detail/<int:id>', book.detail),
 ]

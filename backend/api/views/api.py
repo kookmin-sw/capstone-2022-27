@@ -18,7 +18,7 @@ class P:
         self.t=t
         self.required=required
 
-def api(name='', desc='', method='GET', params=[], responses=dict()):
+def api(name='', desc='', method='GET', params=[], response=None, errors=dict()):
     '''
     문서화 + 파라미터 자동 파싱
     '''
@@ -28,14 +28,15 @@ def api(name='', desc='', method='GET', params=[], responses=dict()):
             p = P(p)
         params_real.append(openapi.Parameter(
             p.name,
-            openapi.IN_QUERY if method == 'GET' else openapi.IN_FORM,
+            openapi.IN_PATH if method == 'GET' else openapi.IN_FORM,
             type=p.t,
             description=p.desc,
             required=p.required,
         ))
     responses_real = {
-        k: openapi.Response(res(v, to_json=True) if k==0 else res(code=k, msg=v, to_json=True)) for k, v in responses.items() 
+        k: v for k, v in errors.items() 
     }
+    responses_real[0] = openapi.Response('정상', response)
     def decorated(func):
         @swagger_auto_schema(
             operation_summary=name,
@@ -56,7 +57,7 @@ def api(name='', desc='', method='GET', params=[], responses=dict()):
                 if param.in_ == openapi.IN_QUERY:
                     kwargs[param.name] = req.query_params.get(param.name, None)
                 elif param.in_ == openapi.IN_PATH:
-                    kwargs[param.name] = req.path_params.get(param.name, None)
+                    pass # kwargs[param.name] = req.path_params.get(param.name, None)
                 elif param.in_ == openapi.IN_BODY or param.in_ == openapi.IN_FORM:
                     param.in_ = openapi.IN_FORM
                     kwargs[param.name] = body[param.name] if param.name in body else req.POST[param.name]
@@ -66,7 +67,10 @@ def api(name='', desc='', method='GET', params=[], responses=dict()):
         return wrapper
     return decorated
 
-def res(data=None, code=0, msg='성공', to_json=False):
+def res(data=None, code=0, msg='알 수 없는 에러', to_json=False):
+    if code == 0:
+        msg = '성공'
+    
     res = {
         'status': {
             'code': code,

@@ -53,7 +53,7 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -81,6 +81,12 @@ TEMPLATES = [
     },
 ]
 
+SWAGGER_SETTINGS = {
+    'SHOW_COMMON_EXTENSIONS': False,
+    'SHOW_EXTENSIONS': False,
+    'DEFAULT_MODEL_RENDERING': 'example',
+    'DEFALUT_NODEL_DEPTH': 0,
+}
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases

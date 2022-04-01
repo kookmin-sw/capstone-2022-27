@@ -6,7 +6,7 @@ from .api import res, api, P
     params=[
         P('name', t='string'),
     ],
-    responses={
+    errors={
         0: "Hello, {name}",
         1: '알 수 없는 에러',
     }
