@@ -13,12 +13,16 @@ I'd like to recommend **books that suit your taste using big data** or books in 
 
 ## 📖 BOOKA
 
-![메인](/pages/img/main.png)
+![메인](pages/img/main.png)
 
 메인페이지는 넷플릭스와 비슷하게 배너와 추천 책들이 보입니다. 넷플릭스처럼 스크롤하면, 추천이유와 책들이 함께 보입니다.
 
-![책 상세](/pages/img/book_detail.png)
+![책 상세](pages/img/book_detail.png)
 책의 정보를 볼 수 있는 페이지입니다. 유사한 책들을 함께 보여주고, 사용자의 리뷰도 확인할 수 있습니다.
+
+## 개발 진행 단계
+![책 상세](pages/img/dev_step.png)
+
 
 
 ## 📎 사용법
@@ -30,6 +34,5 @@ I'd like to recommend **books that suit your taste using big data** or books in 
 |[👑 한창훈](https://github.com/codingnoye)|[김유진](https://github.com/Erica1217)|[홍석진](https://zziny-mago.github.io/)|
 |-------|----|-----|
 |****1688|****1567|****3416|
-
-!<img src="pages/img/창훈.png" width="200" height="300"/>| <img src="pages/img/%EC%9C%A0%EC%A7%84.png" width="200" height="300"/>|<img src="pages/img/석진.png" width="200" height="300"/>
-|팀장, |웹 프론트, 안드로이드|추천 모델|
+|<img src="pages/img/창훈.png" width="200" height="300"/> | <img src="pages/img/%EC%9C%A0%EC%A7%84.png" width="200" height="300"/>|<img src="pages/img/석진.png" width="200" height="300"/>|
+|팀장, DB구축, 서버 개발|웹 프론트, 안드로이드 앱 개발|추천 모델 개발|
