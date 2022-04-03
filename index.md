@@ -12,7 +12,7 @@ While the utilization rate of OTT services such as YouTube and Netflix is increa
 I'd like to recommend **books that suit your taste using big data** or books in a new field to prevent you from being picky about reading.
 
 ## 🎬 소개 영상
-[![예제](http://img.youtube.com/vi/Bte7J176N9Y/0.jpg)](https://youtu.be/RlQEoJaLQRA?t=0s) 
+[![예제](http://img.youtube.com/vi/Bte7J176N9Y/0.jpg)](https://youtu.be/Bte7J176N9Y) 
 
 ## 📖 BOOKA
 
