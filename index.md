@@ -1,7 +1,7 @@
 # 📚 BOOKA
 어떤 책을 읽으실지 고민되나요? 🤔 **BOOKA에서 추천**받아보세요!
 
-## 📕 서비스
+## 📕 프로젝트 소개
 유튜브, 넷플릭스 등 OTT서비스의 이용률이 늘어나는데 반해 독서인구는 점점 줄고 있습니다. 독서의 필요성을 느끼는 사람은 많지만 어떤 책을 읽을지 막막해 독서를 시작하지 못하는 경우가 많습니다. 효과적인 추천을 해 줄 수 있다면 독서를 시작하려는 사람들이 책을 선택하는 것을 도울 수 있을 것입니다.
 
 빅데이터를 이용해 **취향에 맞는 책**을 추천하거나 독서 편식을 막기 위한 **새로운 분야의 책**을 추천하려고 합니다.
@@ -10,6 +10,9 @@
 While the utilization rate of OTT services such as YouTube and Netflix is increasing, the reading population is gradually decreasing. Many people feel the need to read, but they often can't start reading because they don't know which book to read. An effective recommendation would help people who want to start reading choose a book.
 
 I'd like to recommend **books that suit your taste using big data** or books in a new field to prevent you from being picky about reading.
+
+## 🎬 소개 영상
+[![예제](http://img.youtube.com/vi/Bte7J176N9Y/0.jpg)](https://youtu.be/RlQEoJaLQRA?t=0s) 
 
 ## 📖 BOOKA
 
