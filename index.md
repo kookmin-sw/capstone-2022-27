@@ -31,8 +31,9 @@ I'd like to recommend **books that suit your taste using big data** or books in 
 
 ## 🧑‍💻👩🏼‍💻 팀원소개
 
-|[👑 한창훈](https://github.com/codingnoye)|[김유진](https://github.com/Erica1217)|[홍석진](https://zziny-mago.github.io/)|
+|👑 한창훈|김유진|홍석진|
 |-------|----|-----|
+|[![Github link](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/codingnoye)|[![Github link](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Erica1217)|[![Github link](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://zziny-mago.github.io/)|
 |****1688|****1567|****3416|
 |<img src="pages/img/창훈.png" width="200" height="300"/> | <img src="pages/img/%EC%9C%A0%EC%A7%84.png" width="200" height="300"/>|<img src="pages/img/석진.png" width="200" height="300"/>|
 |팀장, DB구축, 서버 개발|웹 프론트, 안드로이드 앱 개발|추천 모델 개발|
