@@ -1,4 +1,23 @@
-<nav>I am navbar</nav>
+<script>
+    // export let userId=0
+    // export let userToken=""
+
+    import { profileMockup } from '../lib/api'
+    let profileInit = profileMockup()
+</script>
+
+<nav>
+    <div class="right"> 
+        <div class='profile'>
+            {#await profileInit};
+            {:then profile} 
+                <div class="profileImg" style="background-image: url('{profile.profileImg}');"></div>
+                <div class='username'>{profile.username}</div>
+            {/await}
+        </div>
+    </div>
+
+</nav>
 <slot></slot>
 
 <style>
@@ -11,5 +30,25 @@
         
         padding: 1rem;
         z-index: 1;
+    }
+    .right{
+        text-align: right;
+        margin-left: auto; 
+        margin-right: 0;
+    }
+    .profile{
+        display: flex;
+        flex-wrap: nowrap;
+        flex-direction: row;
+    }
+    .profileImg{
+        width: 3rem;
+        height: 3rem;
+        background: #333;
+    }
+    .username{
+        margin-left: 2rem;
+        margin-right: 2rem;
+        font-size: 2rem;
     }
 </style>
