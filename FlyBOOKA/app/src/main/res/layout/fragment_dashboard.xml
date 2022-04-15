@@ -146,6 +146,7 @@
                 tools:text="우종영 지음 메이븐 펴냄"/>
 
         </LinearLayout>
+
         <ImageView
             android:id="@+id/recom_cover"
             android:layout_width="106dp"
@@ -153,8 +154,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/recom_reason" />
-
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

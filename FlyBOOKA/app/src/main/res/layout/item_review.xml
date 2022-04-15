@@ -23,6 +23,7 @@
             android:id="@+id/username"
             android:layout_marginTop="8dp"
             app:layout_constraintLeft_toRightOf="@id/profile"
+            app:layout_constraintTop_toTopOf="parent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textStyle="normal"
@@ -45,6 +46,148 @@
             android:gravity="end"
             android:text="12분 전"/>
 
+        <ImageView
+            android:id="@+id/more"
+            android:src="@drawable/ic_more"
+            android:layout_marginTop="8dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="15dp"
+            android:layout_height="15dp"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:background="@drawable/bg_gray_radius"
+        android:padding="16dp"
+        android:layout_margin="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/book_cover"
+            android:layout_width="107dp"
+            android:layout_height="160dp"/>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/book_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="normal"
+                android:textSize="15sp"
+                android:textColor="#202020"
+                android:letterSpacing="-0.01"
+                android:lineSpacingExtra="5sp"
+                android:text="컨테이저스 전략적 입소문 (와튼스쿨 마케팅학 최고 권위자가 전하는 소셜 마케팅 전략)"/>
+
+            <TextView
+                android:id="@+id/writer"
+                android:layout_marginTop="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="normal"
+                android:textSize="12sp"
+                android:textColor="@color/gray50"
+                android:letterSpacing="-0.02"
+                android:lineSpacingExtra="4sp"
+                android:text="조나 버거 지음\n문학동네 펴냄"/>
+
+            <RatingBar
+                android:id="@+id/ratingbar"
+                android:layout_width="100dp"
+                android:layout_height="20dp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="normal"
+        android:textSize="15sp"
+        android:textColor="#202020"
+        android:letterSpacing="0"
+        android:lineSpacingExtra="6sp"
+        android:text="우연히 전에 읽던 책(일취월장)에서 이 책에서 나온 내용 일부가 적혀있었는데 그 내용이 너무 흥미로워서 바로 알아보니 마케팅 관련 베스트셀러이더라고요..."/>
+
+    <LinearLayout
+        android:layout_marginTop="24dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/good_btn"
+            android:src="@drawable/ic_selected"
+            android:layout_width="25dp"
+            android:layout_height="25dp"/>
+
+        <TextView
+            android:id="@+id/good_tv"
+            android:layout_marginLeft="4dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="normal"
+            android:textSize="12sp"
+            android:textColor="@color/gray40"
+            android:letterSpacing="-0.02"
+            android:lineSpacingExtra="0sp"
+            android:text="좋아요 1"/>
+
+        <ImageView
+            android:layout_marginStart="14dp"
+            android:id="@+id/comment_btn"
+            android:src="@drawable/ic_comment"
+            android:layout_width="25dp"
+            android:layout_height="25dp"/>
+
+        <TextView
+            android:id="@+id/comment_tv"
+            android:layout_marginStart="4dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="normal"
+            android:textSize="12sp"
+            android:textColor="@color/gray40"
+            android:letterSpacing="-0.02"
+            android:lineSpacingExtra="0sp"
+            android:text="댓글 2"/>
+
+        <ImageView
+            android:layout_marginStart="14dp"
+            android:id="@+id/share_btn"
+            android:src="@drawable/ic_comment"
+            android:layout_width="25dp"
+            android:layout_height="25dp"/>
+
+        <TextView
+            android:id="@+id/share_tv"
+            android:layout_marginStart="4dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="normal"
+            android:textSize="12sp"
+            android:textColor="@color/gray40"
+            android:letterSpacing="-0.02"
+            android:lineSpacingExtra="0sp"
+            android:text="공유"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#eaeaea"/>
 
 </LinearLayout>
