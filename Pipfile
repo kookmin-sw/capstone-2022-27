@@ -14,6 +14,8 @@ drf-yasg = "*"
 djangorestframework = "*"
 mysqlclient = "*"
 django-cors-headers = "*"
+argon2-cffi = "*"
+djangorestframework-jwt = "*"
 
 [dev-packages]
 
