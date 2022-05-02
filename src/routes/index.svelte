@@ -1,22 +1,28 @@
 <div class="content">
-
-    {#await initBanner}
-        <p>loading..</p>
-    {:then banner}
-        <Banner img={banner.image} desc={banner.desc} 
-        keywords={banner.keyword} bgColor = {banner.bgColor} />
-    {/await}
+    
+        {#await initBanner}
+            <p>loading..</p>
+        {:then banner}
+            <Banner img={banner.image} desc={banner.desc} 
+            keywords={banner.keyword} bgColor = {banner.bgColor} />
+        {/await}
     
     
-    {#await init}
-        <p>waiting..</p>
-    {:then recoms}
-        {#each recoms as recom}
-            <div><RecomList recom={recom}/></div>
-        {/each}
-    {:catch error}
-        <p>error: {error.message}</p>
-    {/await}
+    <div class=' horizontal-center'>
+        <div class='RecomLists'>
+        <p class='foryou'>당신을 위한 추천</p>
+        <hr style="borderr:solid 1px #26282B">
+        {#await init}
+            <p>waiting..</p>
+        {:then recoms}
+            {#each recoms as recom}
+                <div><RecomList recom={recom}/></div>
+            {/each}
+        {:catch error}
+            <p>error: {error.message}</p>
+        {/await}
+        </div>
+    </div>
 
 </div>
 
@@ -31,7 +37,6 @@
 
 <style>
     .content {
-        margin: 1rem;
         display: flex;
         flex-direction: column;
     }
@@ -41,4 +46,20 @@
         flex-wrap: nowrap;
         flex-direction: row;
     }
+    .foryou{
+        font-family: 'Pretendard';
+        font-style: normal;
+        font-weight: 700;
+        font-size: 1rem;
+        line-height: 1.25px;
+    }
+    .RecomLists{
+        width: 42rem;
+    }
+
+    .horizontal-center {
+        display: flex;
+        justify-content: center;
+    }
+
 </style>
