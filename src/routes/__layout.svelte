@@ -3,6 +3,7 @@
     // export let userToken=""
 
     import { profileMockup } from '../lib/api'
+    import '../../static/fonts/pretendard-subset.css'
     let profileInit = profileMockup()
 </script>
 
