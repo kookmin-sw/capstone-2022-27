@@ -16,6 +16,8 @@ mysqlclient = "*"
 django-cors-headers = "*"
 argon2-cffi = "*"
 djangorestframework-jwt = "*"
+flask = "*"
+numpy = "*"
 
 [dev-packages]
 
