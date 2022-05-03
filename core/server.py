@@ -1,12 +1,17 @@
-from flask import Flask
+from flask import Flask, abort, request
 
-from embeddings import Embeddings
-from latent_factor import LatentFactor
+from models.embeddings import Embeddings
+from models.latent_factor import LatentFactor
 
 app = Flask(__name__)
 
 Embeddings.init()
 LatentFactor.init()
+
+@app.before_request
+def whitelist():
+    if request.remote_addr not in ['127.0.0.1']:
+        abort(403)
 
 @app.route('/embeddings/usertobooks/<int:user_idx>')
 def embedding_user_to_books(user_idx):

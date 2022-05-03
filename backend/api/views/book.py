@@ -3,9 +3,6 @@ from django.db.models import F, Count
 from ..models import Book, User, Review
 from ..serializer import BookSerializer, BookSimpleSerializer, BookDetailSerializer
 
-def random_books(count=10):
-    return Book.objects.annotate(num_reviews=Count('reviews')).order_by('num_reviews')[:count]
-
 @api(
     name="책 상세",
     method='GET',
