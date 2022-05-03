@@ -14,11 +14,10 @@
             <div class='bookinfo'>
                 <div class='col'>
                     <div class="title">{book.title}</div>
-                    <div class="isgood">{book.title}</div>
                     <div class="bookstate">읽었어요</div>
                 </div>
                 
-                <div class="author">{book.author} 지음 | {book.publisher} 펴냄 </div>
+                <div class="author"><b>{book.author}</b> 지음 | <b>{book.publisher}</b> 펴냄 </div>
                 <div class="keyword">
                     {#each book.keywords as keyword}
                         <a>#{keyword} </a>
@@ -39,6 +38,7 @@
         flex-direction: column;
         align-items:flex-start;
         margin: .8rem 1rem;
+        background-color: #F7F8F9;
     }
 
     .image {
@@ -59,7 +59,7 @@
     .author {
         font-size: 0.8rem;
         color: #444;
-        font-weight: bold;
+        font-weight: 400;
     }
 
     .desc {
@@ -70,7 +70,7 @@
     }
 
     .book-detail {
-        margin: 3rem;
+        margin: 0rem;
         display: flex;
         flex-direction: column;
     }

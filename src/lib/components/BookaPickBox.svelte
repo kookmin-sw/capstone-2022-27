@@ -21,8 +21,8 @@ export let textColor="#24E772"
 }
 
 .center{
-        flex: auto;
-        display: flex;
-        justify-content: center;
+    flex: auto;
+    display: flex;
+    justify-content: center;
     }
 </style>

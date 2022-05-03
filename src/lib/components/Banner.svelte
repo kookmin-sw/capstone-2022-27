@@ -7,8 +7,8 @@ export let keywords = []
 export let bgColor=""
 </script>
 
-<div class="container" style="background-color:{bgColor}">
-    <div class='col' style="background-color: #9EA4AA;">
+<div class="container">
+    <div class='col'>
         <div class='left-banner' style="width:100%; position:relative">
             <div class='vertical-center'><PickBook img={img} starColor='#23E771'></PickBook></div>
         </div>
@@ -41,7 +41,7 @@ export let bgColor=""
 </div>
     
 <style>
-    .container .col:nth-child(1) { flex-grow: 1; width: 15rem;}
+    .container .col:nth-child(1) { flex-grow: 1; background-color: #9EA4AA; width: 15rem;}
     .container .col:nth-child(2) { flex-grow: 1; background-color: #26282B; width: 42rem;}
     .container .col:nth-child(3) { flex-grow: 1; background-color: #E9EBED; width: 18rem;}
 
