@@ -7,6 +7,10 @@ import json
 
 from rest_framework.response import Response
 
+import jwt, os
+
+SECRET = os.getenv('DJANGO_SECRET_KEY')
+
 class P:
     name: str
     desc: str
@@ -18,7 +22,7 @@ class P:
         self.t=t
         self.required=required
 
-def api(name='', desc='', method='GET', params=[], response=None, errors=dict()):
+def api(name='', desc='', method='GET', params=[], response=None, errors=dict(), auth=False):
     '''
     문서화 + 파라미터 자동 파싱
     '''
@@ -32,6 +36,13 @@ def api(name='', desc='', method='GET', params=[], response=None, errors=dict())
             type=p.t,
             description=p.desc,
             required=p.required,
+        ))
+    if auth:
+        params_real.append(openapi.Parameter(
+            'token',
+            openapi.IN_FORM,
+            type='string',
+            desciption='유저 토큰',
         ))
     responses_real = {
         k: v for k, v in errors.items() 
@@ -63,6 +74,10 @@ def api(name='', desc='', method='GET', params=[], response=None, errors=dict())
                     kwargs[param.name] = body[param.name] if param.name in body else req.POST[param.name]
                 elif param.in_ == openapi.IN_HEADER:
                     kwargs[param.name] = req.headers.get(param.name, None)
+            if auth:
+                del kwargs['token']
+                token = body['token'] if 'token' in body else req.POST['token']
+                kwargs['user'] = jwt.decode(token, SECRET, algorithms=['HS256'])
             return func(req, *args, **kwargs)
         return wrapper
     return decorated

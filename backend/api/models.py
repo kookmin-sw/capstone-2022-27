@@ -18,10 +18,14 @@ class Book(Model):
     kdc = CharField(max_length=200, blank=True) # KDC 번호
     category = CharField(max_length=200, blank=True) # 카테고리 (KDC 대분류)
 class User(Model):
-    age = IntegerField()
-    sex = CharField(max_length=100)
-    is_love = CharField(max_length=100)
-    job = CharField(max_length=200)
+    age = IntegerField(blank=True, null=True)
+    sex = CharField(max_length=100, null=True, blank=True)
+    is_love = CharField(max_length=100, null=True, blank=True)
+    job = CharField(max_length=200, null=True, blank=True)
+    booka = BooleanField(default=False)
+    username = CharField(max_length=200, null=True, blank=True)
+    nickname = CharField(max_length=200, null=True, blank=True)
+    password = CharField(max_length=400, null=True, blank=True)
     
 class Review(Model):
     book = ForeignKey('Book', on_delete=models.CASCADE, related_name='reviews')

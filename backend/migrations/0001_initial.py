@@ -26,6 +26,8 @@ class Migration(migrations.Migration):
                 ('desc', models.TextField()),
                 ('desc_pub', models.TextField()),
                 ('desc_index', models.TextField()),
+                ('category', models.CharField(blank=True, max_length=200)),
+                ('kdc', models.CharField(blank=True, max_length=200))
             ],
         ),
     ]
