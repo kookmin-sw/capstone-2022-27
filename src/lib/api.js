@@ -7,6 +7,7 @@ const safe_return = async (promise) => {
         const res = await promise
         if (res.status === 200) {
             if (res.data.status.code == 0) {
+                console.log(res.data.content)
                 return res.data.content
             } else {
                 throw new Error(res.data.status.msg)
@@ -20,6 +21,7 @@ const safe_return = async (promise) => {
 const api = async (url, params) => {
     const promise = axios.get(`${BASEURL}/api/${url}`, {params: params})
     return safe_return(promise)
+    // return promise
 }
 
 const test = async (name) => {
@@ -150,17 +152,23 @@ const recomsMockup = async () => {
 }
 
 const bookDetailMockup = async () => {
-    const book = {
-            id: 0,
-            image: 'https://image.aladin.co.kr/product/29045/74/cover500/k192836746_2.jpg',
-            title: '불편한 편의점',
-            author: '김호연',
-            publisher: '나무옆의자',
-            intro: '설명 별로 안긴거',
-            desc: '설명 완전 긴거',
+    const book = { 
+            book :{
+                id: 0,
+                image: 'https://image.aladin.co.kr/product/29045/74/cover500/k192836746_2.jpg',
+                title: '불편한 편의점',
+                author: '김호연',
+                publisher: '나무옆의자',
+                intro: '설명 별로 안긴거',
+                desc: '설명 완전 긴거',
+            },
             keywords: ['키워드1', '키워드2', '키워드3']
         }
     return book
+}
+const bookDetail = async (idx) => {
+    const VITE_API_URL = 'http://192.168.0.155:3001/api/'
+    return safe_return(axios.get(`${VITE_API_URL}book/detail/${idx}`))
 }
 
 const mainBannerMockup = async () => {
@@ -190,7 +198,7 @@ const profileMockup = async () => {
 export {
     api,
     test,
-    booksMockup, bookDetailMockup, 
+    booksMockup, bookDetailMockup, bookDetail,
     mainBannerMockup,profileMockup,
     recomsMockup,
 }

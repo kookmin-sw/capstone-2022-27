@@ -87,16 +87,20 @@
     }
     .custom-input{
         border-width: 0px 0px 1px;
-        border-color: #DADADA;
         font-size: 14px;
         text-align: left;
         letter-spacing: 0px;
         color: #323A47;
         padding-bottom: 5px;
+
+        transition: 0.4s border-color ease;
     }
     .search{
         margin-right: 2.5rem;
         width:19.375rem
+    }
+    .search>img{
+        margin: -0.1rem 0 0.3rem 0 ;
     }
     input{
         display: flex;
@@ -107,8 +111,11 @@
         flex-grow: 1;
         background-color: #00000000;
     }
+    .custom-input:focus{
+        outline: none;
+        border-color: #323A47;
+    }
     .booka{
-        
         margin-left: 0.5rem;
     }
     .booka-img{
