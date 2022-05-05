@@ -8,6 +8,7 @@ export let title
 <div class="book_small">
     <div class="image" style="background-image: url('{image}');"></div>
     <div class="title">{title}</div>
+    <div class="author">{title}</div>
 </div>
 
 <style>
@@ -17,7 +18,6 @@ export let title
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin: .5rem 1rem;
 }
 
 .image {
@@ -25,15 +25,22 @@ export let title
     background-size: cover;
     width: 6rem;
     height: 9rem;
-    margin-bottom: 1rem;
-    box-shadow: 0px 5px 12px 0px rgba(0, 0, 0, 0.14);
 }
 
 .title {
-    font-size: 0.9rem;
+    font-size: 0.825rem;
     text-align: center;
-    color: #444;
-    font-weight: bold;
+    color: #1B1D1F;
+    font-weight: 600;
+    margin-top: 0.75rem;
+}
+
+.author{
+    font-size: 0.825rem;
+    text-align: center;
+    color: #72787F;
+    font-weight: 400;
+    margin-top:0.25 ;
 }
 
 </style>

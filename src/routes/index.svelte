@@ -1,23 +1,34 @@
 <div class="content">
-
-    {#await initBanner}
-        <p>loading..</p>
-    {:then banner}
-        <Banner img={banner.image} desc={banner.desc} 
-        keywords={banner.keyword} bgColor = {banner.bgColor} />
-    {/await}
+    
+        {#await initBanner}
+            <p>loading..</p>
+        {:then banner}
+            <Banner img={banner.image} desc={banner.desc} 
+            keywords={banner.keyword} bgColor = {banner.bgColor} />
+        {/await}
     
     
-    {#await init}
-        <p>waiting..</p>
-    {:then recoms}
-        {#each recoms as recom}
-            <div><RecomList recom={recom}/></div>
-        {/each}
-    {:catch error}
-        <p>error: {error.message}</p>
-    {/await}
-
+    <div class='container'>
+        <div class='col'></div>
+        <div class='col'>
+            <div class=''>
+                <div class='recomlists'>
+                    <p class='foryou'>당신을 위한 추천</p>
+                    <hr style="borderr:solid 1px #26282B">
+                    {#await init}
+                        <p>waiting..</p>
+                    {:then recoms}
+                        {#each recoms as recom}
+                            <div class='recomlist'><RecomList recom={recom}/></div>
+                        {/each}
+                    {:catch error}
+                        <p>error: {error.message}</p>
+                    {/await}
+                </div>
+            </div>
+        </div>
+        <div class='col'></div>
+    </div>
 </div>
 
 <script>
@@ -30,8 +41,16 @@
 </script>
 
 <style>
+    .container .col:nth-child(1) { flex-grow: 1; width: 15rem;}
+    .container .col:nth-child(2) { flex-grow: 1; width: 42rem;}
+    .container .col:nth-child(3) { flex-grow: 1; width: 18rem;}
+
+    .container {
+        /* display: flex; */
+        display: inline-flex;
+        align-items: center;
+    }
     .content {
-        margin: 1rem;
         display: flex;
         flex-direction: column;
     }
@@ -41,4 +60,24 @@
         flex-wrap: nowrap;
         flex-direction: row;
     }
+    .foryou{
+        font-family: 'Pretendard';
+        font-style: normal;
+        font-weight: 700;
+        font-size: 1rem;
+        line-height: 1.25px;
+    }
+
+    .horizontal-center {
+        display: flex;
+        justify-content: center;
+    }
+    .recomlists{
+        margin-top: 3rem;
+        margin-left: 1.5rem;
+    }
+    .recomlist{
+        margin-bottom: 3rem;
+    }
+
 </style>
