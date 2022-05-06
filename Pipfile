@@ -18,6 +18,7 @@ argon2-cffi = "*"
 djangorestframework-jwt = "*"
 flask = "*"
 numpy = "*"
+tqdm = "*"
 
 [dev-packages]
 

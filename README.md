@@ -23,6 +23,10 @@ pipenv shell
 npm run server
 // 터미널 2: 클라이언트
 npm run dev
+// 터미널 3: 코어
+pipenv shell
+cd core
+python3 server.py
 ```
 
 ## 개발문서 확인 방법

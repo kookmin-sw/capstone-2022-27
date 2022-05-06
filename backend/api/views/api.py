@@ -40,9 +40,10 @@ def api(name='', desc='', method='GET', params=[], response=None, errors=dict(),
     if auth:
         params_real.append(openapi.Parameter(
             'token',
-            openapi.IN_FORM,
+            openapi.IN_PATH if method == 'GET' else openapi.IN_FORM,
             type='string',
             desciption='유저 토큰',
+            
         ))
     responses_real = {
         k: v for k, v in errors.items() 
@@ -69,15 +70,19 @@ def api(name='', desc='', method='GET', params=[], response=None, errors=dict(),
                     kwargs[param.name] = req.query_params.get(param.name, None)
                 elif param.in_ == openapi.IN_PATH:
                     pass # kwargs[param.name] = req.path_params.get(param.name, None)
-                elif param.in_ == openapi.IN_BODY or param.in_ == openapi.IN_FORM:
+                elif method == 'POST' and param.in_ == openapi.IN_BODY or param.in_ == openapi.IN_FORM:
                     param.in_ = openapi.IN_FORM
-                    kwargs[param.name] = body[param.name] if param.name in body else req.POST[param.name]
+                    kwargs[param.name] = body[param.name] if param.name in body else req.POST[param.name] if param.name in req.POST else None
                 elif param.in_ == openapi.IN_HEADER:
                     kwargs[param.name] = req.headers.get(param.name, None)
             if auth:
-                del kwargs['token']
-                token = body['token'] if 'token' in body else req.POST['token']
-                kwargs['user'] = jwt.decode(token, SECRET, algorithms=['HS256'])
+                token = None
+                if 'token' in body:
+                    token = body['token']
+                elif 'token' in req.POST:
+                    token = req.POST['token']
+                if not token: kwargs['token'] = None
+                else: kwargs['token'] = jwt.decode(token, SECRET, algorithms=['HS256'])
             return func(req, *args, **kwargs)
         return wrapper
     return decorated
