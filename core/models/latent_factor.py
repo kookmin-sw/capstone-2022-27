@@ -14,9 +14,12 @@ class LatentFactor:
         print(f'Latent factor computated in {t} seconds.')
     
     @classmethod
-    def update(cls):
+    def update(cls, used_idx, book_idx, rating):
         pass
 
     @classmethod
-    def user_to_books(used_idx, book_idx, rating):
+    def compute(cls):
         pass
+
+if __name__ == "__main__":
+    pass

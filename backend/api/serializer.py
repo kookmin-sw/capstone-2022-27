@@ -7,6 +7,12 @@ class SimpleSerializer(serializers.Serializer):
 class TokenSerializer(serializers.Serializer):
     token = serializers.CharField()
 
+class ReviewSerializer(serializers.Serializer):
+    user_name = serializers.CharField()
+    read_state = serializers.CharField()
+    score = serializers.IntegerField()
+    created_at = serializers.DateTimeField()
+
 class BookSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
@@ -21,8 +27,10 @@ class BookSimpleSerializer(serializers.ModelSerializer):
 
 class BookDetailSerializer(serializers.Serializer):
     book = BookSerializer()
+    hope = serializers.BooleanField()
     similar = BookSimpleSerializer(many=True)
     keywords = serializers.ListField(child=serializers.CharField())
+    reviews = ReviewSerializer(many=True)
     
 class BookLineSerializer(serializers.Serializer):
     title = serializers.CharField()
