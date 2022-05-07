@@ -35,5 +35,9 @@ class Review(Model):
     created_at = DateTimeField(auto_now_add=True, blank=True)
 
 class Keyword(Model):
-    book = ForeignKey('Book', on_delete=models.CASCADE, related_name='tags')
+    book = ForeignKey(Book, on_delete=models.CASCADE, related_name='keywords')
     keyword = CharField(max_length=100)
+    
+    def __str__(self):
+        return self.keyword
+    

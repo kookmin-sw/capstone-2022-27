@@ -14,22 +14,25 @@ class ReviewSerializer(serializers.Serializer):
     created_at = serializers.DateTimeField()
 
 class BookSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField()
+    keywords = serializers.StringRelatedField(many=True, read_only=True, required=False)
     class Meta:
         model = Book
-        fields = ('id', 'image', 'title', 'isbn', 'author', 'publisher', 'pubdate', 'genre', 'intro', 'desc', 'desc_pub', 'desc_index', 'category', 'kdc')
+        fields = ('id', 'image', 'title', 'isbn', 'author', 'keywords', 'publisher', 'pubdate', 'genre', 'intro', 'desc', 'desc_pub', 'desc_index', 'category', 'kdc', 'keywords')
         read_only_fields = ('id',)
 
 class BookSimpleSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField()
+    keywords = serializers.StringRelatedField(many=True, read_only=True, required=False)
     class Meta:
         model = Book
-        fields = ('id', 'image', 'title', 'isbn', 'author', 'publisher', 'pubdate')
+        fields = ('id', 'image', 'title', 'isbn', 'author', 'keywords', 'publisher', 'pubdate', 'keywords')
         read_only_fields = ('id',)
 
 class BookDetailSerializer(serializers.Serializer):
     book = BookSerializer()
     hope = serializers.BooleanField()
     similar = BookSimpleSerializer(many=True)
-    keywords = serializers.ListField(child=serializers.CharField())
     reviews = ReviewSerializer(many=True)
     
 class BookLineSerializer(serializers.Serializer):
