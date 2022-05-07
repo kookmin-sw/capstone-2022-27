@@ -39,11 +39,11 @@ def api(name='', desc='', method='GET', params=[], response=None, errors=dict(),
         ))
     if auth:
         params_real.append(openapi.Parameter(
-            'token',
-            openapi.IN_PATH if method == 'GET' else openapi.IN_FORM,
+            'TOKEN',
+            openapi.IN_HEADER,
             type='string',
             desciption='로그인 시 주어지는 유저 토큰',
-            
+            required=False,
         ))
     responses_real = {
         k: v for k, v in errors.items() 
@@ -76,13 +76,10 @@ def api(name='', desc='', method='GET', params=[], response=None, errors=dict(),
                 elif param.in_ == openapi.IN_HEADER:
                     kwargs[param.name] = req.headers.get(param.name, None)
             if auth:
-                token = None
-                if 'token' in body:
-                    token = body['token']
-                elif 'token' in req.POST:
-                    token = req.POST['token']
-                if not token: kwargs['token'] = None
-                else: kwargs['token'] = jwt.decode(token, SECRET, algorithms=['HS256'])
+                if 'TOKEN' in kwargs:
+                    del kwargs['TOKEN']
+                token = req.headers.get('TOKEN', None)
+                kwargs['token'] = jwt.decode(token, SECRET, algorithms=['HS256'])
             return func(req, *args, **kwargs)
         return wrapper
     return decorated
