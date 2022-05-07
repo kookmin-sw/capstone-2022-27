@@ -32,7 +32,7 @@ class Review(Model):
     user = ForeignKey('User', on_delete=models.CASCADE, related_name='reviews')
     read_state = CharField(max_length=100)
     score = IntegerField()
-    created_at = DateTimeField()
+    created_at = DateTimeField(auto_now_add=True, blank=True)
 
 class Keyword(Model):
     book = ForeignKey('Book', on_delete=models.CASCADE, related_name='tags')

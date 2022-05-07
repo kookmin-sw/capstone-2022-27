@@ -3,16 +3,17 @@ from flask import Flask, abort, request
 import json
 
 from models.gnn import GNN
-from models.latent_factor import LatentFactor
+from models.cosine_similarity import CosineSimilarity
 
 app = Flask(__name__)
 
+# 결과에 주어질 최대 개수
 N_BOOK = 5000
 N_USER = 5000
 
 if __name__ == "__main__":
     GNN.init()
-    LatentFactor.init()
+    CosineSimilarity().init()
 
 @app.before_request
 def whitelist():
@@ -21,26 +22,25 @@ def whitelist():
 
 @app.route('/gnn/usertobooks/<int:user_idx>')
 def gnn_user_to_books(user_idx):
-    return json.dumps(GNN.user_to_books(user_idx))
+    user_idx = CosineSimilarity.query_as_a(user_idx)
+    return json.dumps(GNN.user_to_books(user_idx)[:N_BOOK])
 
 @app.route('/gnn/booktobooks/<int:book_idx>')
 def gnn_book_to_books(book_idx):
     return json.dumps(GNN.book_to_books(book_idx)[:N_BOOK])
 
+@app.route('/gnn/usertousers/<int:user_idx>')
+def gnn_user_to_users(user_idx):
+    user_idx = CosineSimilarity.query_as_a(user_idx)
+    return json.dumps(GNN.user_to_users(user_idx)[:20])
+
 @app.route('/gnn/reload')
 def gnn_reload():
     GNN.init()
 
-@app.route('/latent_factor/usertobooks/<int:user_idx>')
-def latent_factor_user_to_books(user_idx):
-    return json.dumps(LatentFactor.user_to_books(user_idx)[:N_USER])
-
-@app.route('/latent_factor/update/<int:user_idx>/<int:book_idx>/<float:rating>')
-def latent_factor_update(user_idx, book_idx, rating):
-    LatentFactor.update(user_idx, book_idx, rating)
-    
-@app.route('/latent_factor/recompute/<int:user_idx>')
-def latent_factor_recompute(user_idx, book_idx, rating):
-    LatentFactor.compute()
+@app.route('/cossim/makeasa/<int:user_idx>', methods=['POST'])
+def cossim_make_as_a(user_idx):
+    records = request.json
+    return str(CosineSimilarity.make_as_a(user_idx, records))
 
 app.run(host='127.0.0.1', port=3009, debug=True)

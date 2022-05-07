@@ -42,7 +42,7 @@ def api(name='', desc='', method='GET', params=[], response=None, errors=dict(),
             'token',
             openapi.IN_PATH if method == 'GET' else openapi.IN_FORM,
             type='string',
-            desciption='유저 토큰',
+            desciption='로그인 시 주어지는 유저 토큰',
             
         ))
     responses_real = {

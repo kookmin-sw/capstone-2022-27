@@ -12,6 +12,7 @@ class GNN:
     books = []
     pre_user_to_books = {}
     pre_book_to_books = {}
+    pre_user_to_users = {}
     
     @classmethod
     def precomputation(cls):
@@ -55,6 +56,18 @@ class GNN:
         
     @classmethod
     def user_to_books(cls, user_idx):
+        if user_idx not in cls.all_users:
+            return []
+        if user_idx not in cls.pre_user_to_books:
+            t1 = time()
+            user_ebd = cls.all_users[user_idx]
+            user_books = []
+            for book_idx, book_ebd in cls.books:
+                if user_idx == book_idx:
+                    continue
+                user_books.append((book_idx, np.dot(user_ebd, book_ebd)))
+            cls.pre_user_to_books[user_idx] = user_books
+            print(f'User {user_idx} computed in {time() - t1} seconds.')
         return sorted(cls.pre_user_to_books[user_idx], key=lambda x: x[1], reverse=True)
 
     @classmethod
@@ -70,5 +83,21 @@ class GNN:
                     continue
                 book_books.append((book2_idx, np.dot(book_ebd, book2_ebd)))
             cls.pre_book_to_books[book_idx] = book_books
-            print(f'{book_idx} computed in {time() - t1} seconds.')
+            print(f'Book {book_idx} computed in {time() - t1} seconds.')
         return sorted(cls.pre_book_to_books[book_idx], key=lambda x: x[1], reverse=True)
+    
+    @classmethod
+    def user_to_users(cls, user_idx):
+        if user_idx not in cls.all_users:
+            return []
+        if user_idx not in cls.pre_user_to_users:
+            t1 = time()
+            user_ebd = cls.all_users[user_idx]
+            user_users = []
+            for user2_idx, user2_ebd in cls.users:
+                if user_idx == user2_idx:
+                    continue
+                user_users.append((user2_idx, np.dot(user_ebd, user2_ebd)))
+            cls.pre_user_to_users[user_idx] = user_users
+            print(f'UserToUser {user_idx} computed in {time() - t1} seconds.')
+        return sorted(cls.pre_user_to_users[user_idx], key=lambda x: x[1], reverse=True)

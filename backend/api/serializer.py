@@ -37,6 +37,10 @@ class BookLineSerializer(serializers.Serializer):
     desc = serializers.CharField()
     books = BookSimpleSerializer(many=True)
     
+class MainSerializer(serializers.Serializer):
+    banner = BookDetailSerializer(many=True)
+    lines = BookLineSerializer(many=True)
+    
 
 # 리뷰 시리얼라이저는 유저정보도 담기
 # 책 detail에 리뷰 넣기
