@@ -1,5 +1,11 @@
+<script>
+    export let recom
+    import BookSmall from '$lib/components/BookSmall.svelte'
+    import Color from '../../routes/Color.svelte'
+</script>
+
 <div class="content">
-    {#if recom.recommand.length > 0 }
+    <!-- {#if recom.recommand.length > 0 }
         <div class='reason'>{recom.recommand}</div>
     {:else if recom.keywords.length>0 }
         <div class='row'>
@@ -7,7 +13,8 @@
                 <div class='reason'>#{keyword} </div>
             {/each}
         </div>
-    {/if}
+    {/if} -->
+    <div class='reason'>{recom.title}</div>
 
     <div class='row'>
         {#each recom.books as book}
@@ -15,13 +22,6 @@
         {/each}
     </div>
 </div>
-
-<script>
-    export let recom
-
-    import BookSmall from '$lib/components/BookSmall.svelte'
-    import Color from '../../routes/Color.svelte'
-</script>
 
 <style>
     .content {
