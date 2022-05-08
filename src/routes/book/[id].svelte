@@ -1,13 +1,12 @@
 <script>
-    import { bookDetail, bookDetailMockup ,profileMockup} from '$lib/api'
+    import { bookDetail ,profileMockup} from '$lib/api'
     import { page } from '$app/stores';
     import BookIntro from '$lib/components/BookIntro.svelte';
     import RecomList from '$lib/components/RecomList.svelte';
     import BookSmall from '$lib/components/BookSmall.svelte';
 
-    // let id = $page.params.id
-    // const bookP = bookDetail(id)
-    const bookP = bookDetailMockup()
+    let id = $page.params.id
+    const bookP = bookDetail(id)
     let btnColors = ['#FF68CC', '#37DBFF', '#23E771']
 </script>
 
@@ -22,7 +21,7 @@
                 <div class="summary">{book['book']['intro']}</div>
                 <div class="author"><b>{book['book']['author']}</b> 지음 | <b>{book['book']['publisher']}</b> 펴냄 </div>
                 <div class="keywords">
-                    {#each book['keywords'] as keyword}
+                    {#each book['book']['keywords'] as keyword}
                         <a href=' ' class='keyword'>#{keyword} </a>
                     {/each}
                 </div>
