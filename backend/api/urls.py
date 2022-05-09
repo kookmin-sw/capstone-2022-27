@@ -7,6 +7,7 @@ urlpatterns = [
     path('user/login/', user.login),
     
     path('book/detail/<int:id>', book.detail),
+    path('book/review_pages/<int:id>/<int:page>', book.review_pages),
     path('book/search_keyword/<keyword>/<int:page>', book.search_keyword),
     path('book/search/<keyword>/<int:page>', book.search),
     path('book/firstpage/', book.firstpage),

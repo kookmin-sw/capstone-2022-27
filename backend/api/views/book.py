@@ -31,23 +31,52 @@ def detail(req, id:int, token):
             hope = True
             
     reviews = []
-    for review in book.reviews.order_by('-created_at')[:15]:
+    all_reviews = Review.objects.filter(book=book, content__isnull=False).exclude(content__exact='')
+    for review in all_reviews.order_by('-created_at')[:3]:
         reviews.append({
             'user_name': review.user.username if review.user.booka else 'test',
             'read_state': review.read_state,
             'score': review.score,
             'created_at': review.created_at,
+            'content': review.content,
         })
     
     data = {
         'book': BookSerializer(book).data,
         'similar': BookSimpleSerializer(similar_books, many=True).data,
         'reviews': ReviewSerializer(reviews, many=True).data,
+        'num_reviews': all_reviews.count(),
         'hope': hope,
     }
     
     return res(data)
 
+@api(
+    name="리뷰 페이지",
+    method='GET',
+    params=[
+        P('id', t='integer', desc='책의 id'),
+        P('page', t='integer', desc='페이지 번호'),
+    ],
+    response=ReviewSerializer(many=True),
+    errors={
+        1: '알 수 없는 에러',
+    }
+)
+def review_pages(req, id:int, page):
+    book = Book.objects.get(id=id)            
+    reviews = []
+    all_reviews = Review.objects.filter(book=book, content__isnull=False).exclude(content__exact='')
+    for review in all_reviews.order_by('-created_at')[page*3:(page+1)*3]:
+        reviews.append({
+            'user_name': review.user.username if review.user.booka else 'test',
+            'read_state': review.read_state,
+            'score': review.score,
+            'created_at': review.created_at,
+            'content': review.content,
+        })
+
+    return res(ReviewSerializer(reviews, many=True).data)
 
 @api(
     name="책 키워드 검색",

@@ -17,6 +17,7 @@ class ReviewSerializer(serializers.Serializer):
     read_state = serializers.CharField()
     score = serializers.IntegerField()
     created_at = serializers.DateTimeField()
+    content = serializers.CharField()
 
 class BookSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField()
@@ -39,6 +40,7 @@ class BookDetailSerializer(serializers.Serializer):
     hope = serializers.BooleanField()
     similar = BookSimpleSerializer(many=True)
     reviews = ReviewSerializer(many=True)
+    num_reviews = serializers.IntegerField()
     
 class BookLineSerializer(serializers.Serializer):
     title = serializers.CharField()
