@@ -33,6 +33,7 @@ class Review(Model):
     read_state = CharField(max_length=100)
     score = IntegerField()
     created_at = DateTimeField(auto_now_add=True, blank=True)
+    content = TextField(null=True, default='')
 
 class Keyword(Model):
     book = ForeignKey(Book, on_delete=models.CASCADE, related_name='keywords')
