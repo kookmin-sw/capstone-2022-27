@@ -7,6 +7,11 @@ class SimpleSerializer(serializers.Serializer):
 class TokenSerializer(serializers.Serializer):
     token = serializers.CharField()
 
+class AccountSerializer(serializers.Serializer):
+    token = serializers.CharField()
+    nickname = serializers.CharField()
+    is_first = serializers.BooleanField()
+
 class ReviewSerializer(serializers.Serializer):
     user_name = serializers.CharField()
     read_state = serializers.CharField()
@@ -18,7 +23,7 @@ class BookSerializer(serializers.ModelSerializer):
     keywords = serializers.StringRelatedField(many=True, read_only=True, required=False)
     class Meta:
         model = Book
-        fields = ('id', 'image', 'title', 'isbn', 'author', 'keywords', 'publisher', 'pubdate', 'genre', 'intro', 'desc', 'desc_pub', 'desc_index', 'category', 'kdc', 'keywords')
+        fields = ('id', 'image', 'title', 'isbn', 'author', 'publisher', 'pubdate', 'genre', 'intro', 'desc', 'desc_pub', 'desc_index', 'category', 'kdc', 'keywords')
         read_only_fields = ('id',)
 
 class BookSimpleSerializer(serializers.ModelSerializer):
@@ -26,7 +31,7 @@ class BookSimpleSerializer(serializers.ModelSerializer):
     keywords = serializers.StringRelatedField(many=True, read_only=True, required=False)
     class Meta:
         model = Book
-        fields = ('id', 'image', 'title', 'isbn', 'author', 'keywords', 'publisher', 'pubdate', 'keywords')
+        fields = ('id', 'image', 'title', 'isbn', 'author', 'publisher', 'pubdate', 'keywords')
         read_only_fields = ('id',)
 
 class BookDetailSerializer(serializers.Serializer):
@@ -44,6 +49,9 @@ class MainSerializer(serializers.Serializer):
     banner = BookDetailSerializer(many=True)
     lines = BookLineSerializer(many=True)
     
+class SearchSerializer(serializers.Serializer):
+    books = BookSimpleSerializer(many=True)
+    count = serializers.IntegerField()
 
 # 리뷰 시리얼라이저는 유저정보도 담기
 # 책 detail에 리뷰 넣기
