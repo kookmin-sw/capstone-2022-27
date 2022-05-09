@@ -1,5 +1,6 @@
 <script>
     export let recom
+import { bookDetail } from '$lib/api'
     import BookSmall from '$lib/components/BookSmall.svelte'
     import Color from '../../routes/Color.svelte'
 </script>
@@ -18,7 +19,8 @@
 
     <div class='row'>
         {#each recom.books as book}
-            <a class='book' href={`./book/${book.id}`}><BookSmall image={book.image} title={book.title} /></a>
+            <a class='book' href={`/book/${book.id}`}>
+                <BookSmall image={book.image} title={book.title} author={book.author}/></a>
         {/each}
     </div>
 </div>

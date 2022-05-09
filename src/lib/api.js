@@ -1,23 +1,35 @@
 import axios from 'axios'
 import { identity } from 'svelte/internal'
+import { TOKEN } from './stores.js'
 
 const BASEURL = import.meta.env.VITE_API_URL+"api/"
-const token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6Im5veWUxIiwiaWQiOjE0NzI2NDgzfQ.YHU6KxEIE1ndzBNdbP4-j7Rt4Uzf1QWgMZnDrwdvhtA"
+// const token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6Im5veWUxIiwiaWQiOjE0NzI2NDgzfQ.YHU6KxEIE1ndzBNdbP4-j7Rt4Uzf1QWgMZnDrwdvhtA"
+let token = ""
+TOKEN.subscribe(value => {
+    token = value;
+});
 
 const safe_return = async (promise) => {
+    let res;
     try {
-        const res = await promise
-        if (res.status === 200) {
-            if (res.data.status.code == 0) {
-                console.log(res.data.content)
-                return res.data.content
-            } else {
-                throw new Error(res.data.status.msg)
-            }
-        }
+        res = await promise
     } catch (e) {
         console.error(e)
-        throw new Error('서버와 통신 중 알 수 없는 에러가 발생했습니다.')
+        throw {
+            code: -2,
+            msg: '요청 실패'
+        }
+    }
+    if (res.status === 200) {
+        if (res.data.status.code == 0) {
+            console.log(res.data.content)
+            return res.data.content
+        } else {
+            throw {
+                code: res.data.status.code,
+                msg: res.data.status.msg
+            }
+        }
     }
 }
 

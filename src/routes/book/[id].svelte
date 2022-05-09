@@ -14,42 +14,54 @@
     {#await bookP}
         <p>loading...</p>
     {:then book}
-        <div class="book col">
-            <div class="image" style="background-image: url('{book['book']['image']}');"></div>
-            <div class='bookinfo'>
-                <div class="title">{book['book']['title']}</div>
-                <div class="summary">{book['book']['intro']}</div>
-                <div class="author"><b>{book['book']['author']}</b> 지음 | <b>{book['book']['publisher']}</b> 펴냄 </div>
-                <div class="keywords">
-                    {#each book['book']['keywords'] as keyword}
-                        <a href=' ' class='keyword'>#{keyword} </a>
-                    {/each}
-                </div>
-                <div class='col button_container'>
-                    {#if !true}
-                        <div class='btn btn-selected'>
-                            <img alt='' src='/static/hope_selected.svg' >
-                            <div style='color:{btnColors[0]}'>읽고싶어요</div>
-                        </div>
-                    {/if}
-
-                    {#if true}
-                    <div class='btn'>
-                        <img alt='' src='../static/hope.svg' >
-                        <div>읽고싶어요</div>
+        <div class="book-container">
+            <div class='col margin'>
+                <div class="image" style="background-image: url('{book['book']['image']}');"></div>
+                <div class='bookinfo'>
+                    <div class="title">{book['book']['title']}</div>
+                    <div class="summary">{book['book']['intro']}</div>
+                    <div class="author"><b>{book['book']['author']}</b> 지음 | <b>{book['book']['publisher']}</b> 펴냄 </div>
+                    <div class="keywords">
+                        {#each book['book']['keywords'] as keyword}
+                            <a href=' ' class='keyword'>#{keyword} </a>
+                        {/each}
                     </div>
-                    {/if}
+                    <div class='col button_container'>
+                        {#if !true}
+                            <div class='btn btn-selected'>
+                                <img alt='' src='/static/hope_selected.svg' >
+                                <div style='color:{btnColors[0]}'>읽고싶어요</div>
+                            </div>
+                        {/if}
+
+                        {#if true}
+                        <div class='btn'>
+                            <img alt='' src='../static/hope.svg' >
+                            <div>읽고싶어요</div>
+                        </div>
+                        {/if}
+                    </div>
 
                 </div>
             </div>
         </div>
-        <BookIntro title="책 소개" content="{book['book']['desc']}"/>
-        <BookIntro title="목차" content="{book['book']['desc_index']}"/>
-        <div class='row'>
-        {#each book['similar'] as book}
-            <a class='book' href={`./book/${book.id}`}><BookSmall image={book.image} title={book.title} /></a>
-        {/each}
+        <div class='margin'>
+            <BookIntro title="책 소개" content="{book['book']['desc']}"/>
+            <div class='index'><BookIntro  title="목차" content="{book['book']['desc_index']}"/></div>
+            <div class='index'><BookIntro  title="출판사 책 소개" content="{book['book']['desc_pub']}"/></div>
+            
+            <div class='similar'>
+                <div class='title'>비슷한 책</div>
+                <hr class='border'>
+                <div class='row'>
+                {#each book['similar'] as book}
+                    <a class='book' href={`./${book.id}`}><BookSmall image={book.image} title={book.title} /></a>
+                {/each}
+                </div>
+            </div>
         </div>
+
+        
         
     {:catch error}
         <p>error: {error.message}</p>
@@ -57,11 +69,18 @@
 </div>
 
 <style>
-    .book {
+    .margin{
+        margin-left: 20rem;
+        margin-right: 20rem;
+    }
+    .book-container {
+        width: 100%;
         display: flex;
         flex-direction: column;
         align-items:flex-start;
-        margin: .8rem 1rem;
+        margin-bottom: 1rem;
+        padding-top: 3rem;
+        padding-bottom: 4rem;
         background-color: #F7F8F9;
     }
 
@@ -97,7 +116,6 @@
     }
 
     .book-detail {
-        margin: 0rem;
         display: flex;
         flex-direction: column;
     }
@@ -105,6 +123,7 @@
     .bookinfo{
         margin-left: 2rem;
         margin-top: 2rem;
+        width:80%;
     }
 
     .row {
@@ -191,6 +210,25 @@
         margin-top: 2rem;
     }
 
+    .index{
+        margin-top:3rem;
+    }
+
+    .title{
+    font-family: 'Pretendard';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 1rem;
+    line-height: 1.25rem;
+    }
+    .border{
+        border:solid 1px #26282B;
+        margin-top: 1rem;
+    }
+
+    .similar{
+        margin-top: 3rem;
+    }
     
     
 </style>
