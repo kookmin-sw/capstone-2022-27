@@ -2,13 +2,14 @@
 
 export let image
 export let title
+export let author
 
 </script>
 
 <div class="book_small">
     <div class="image" style="background-image: url('{image}');"></div>
     <div class="title">{title}</div>
-    <div class="author">{title}</div>
+    <div class="author">{author}</div>
 </div>
 
 <style>
@@ -40,7 +41,7 @@ export let title
     text-align: center;
     color: #72787F;
     font-weight: 400;
-    margin-top:0.25 ;
+    margin-top:0.25rem ;
 }
 
 </style>
