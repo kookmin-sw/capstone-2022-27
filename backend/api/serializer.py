@@ -44,7 +44,6 @@ class BookDetailSerializer(serializers.Serializer):
     
 class BookLineSerializer(serializers.Serializer):
     title = serializers.CharField()
-    desc = serializers.CharField()
     books = BookSimpleSerializer(many=True)
     
 class MainSerializer(serializers.Serializer):

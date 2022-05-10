@@ -17,6 +17,8 @@ class Book(Model):
     desc_index = TextField(blank=True) # 책 목차
     kdc = CharField(max_length=200, blank=True) # KDC 번호
     category = CharField(max_length=200, blank=True) # 카테고리 (KDC 대분류)
+    num_review = IntegerField(default=0) # 리뷰 수
+    
 class User(Model):
     age = IntegerField(blank=True, null=True)
     sex = CharField(max_length=100, null=True, blank=True)

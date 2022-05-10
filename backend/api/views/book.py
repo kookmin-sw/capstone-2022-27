@@ -92,11 +92,11 @@ def review_pages(req, id:int, page):
 )
 def search_keyword(req, keyword:str, page:int):
     books_queryset = Book.objects.filter(keywords__keyword=keyword)
-    books = [book for book in books_queryset.annotate(num_reviews=Count('reviews')).order_by('-num_reviews')[page*10:(page+1)*10]]
+    books = [book for book in books_queryset.order_by('-num_review')[page*10:(page+1)*10]]
     
     data = SearchSerializer({
         'books': BookSimpleSerializer(books, many=True).data,
-        'count': len(books_queryset),
+        'count': books_queryset.count(),
     }).data
     
     return res(data)
@@ -114,12 +114,12 @@ def search_keyword(req, keyword:str, page:int):
     },
 )
 def search(req, keyword:str, page:int):
-    books_queryset = Book.objects.filter(Q(title__icontains=keyword)).annotate(type=Value(0, output_field=IntegerField())) | Book.objects.filter(Q(author__icontains=keyword)).annotate(type=Value(1, output_field=IntegerField()))| Book.objects.filter(Q(publisher__icontains=keyword)).annotate(type=Value(2, output_field=IntegerField()))
-    books = [book for book in books_queryset.annotate(num_reviews=Count('reviews')).order_by('type', '-num_reviews')[page*10:(page+1)*10]]
+    books_queryset = Book.objects.filter(Q(title__icontains=keyword)).annotate(type=Value(0, output_field=IntegerField())) | Book.objects.filter(Q(author__icontains=keyword)).annotate(type=Value(1, output_field=IntegerField()))
+    books = [book for book in books_queryset.order_by('type', '-num_review')[page*10:(page+1)*10]]
     
     data = SearchSerializer({
         'books': BookSimpleSerializer(books, many=True).data,
-        'count': len(books_queryset),
+        'count': books_queryset.count(),
     }).data
     
     return res(data)
@@ -189,7 +189,6 @@ def mainpage(req, token):
         
         line_general = BookLineSerializer({
             'title': '그냥 젤 많이 읽을만한 거',
-            'desc': '에이 이거는 추천 잘 되겠지',
             'books': [BookSerializer(Book.objects.get(id=book_id)).data for book_id, score in get_data(f'gnn/usertobooks/{token["id"]}')[:30]]
         })
         
@@ -198,7 +197,6 @@ def mainpage(req, token):
         books = Review.objects.filter(user__in=users_set).values('book').distinct().annotate(num_reviews=Count('book')).order_by('-num_reviews')[:30]
         line_similar_read = BookLineSerializer({
             'title': '비슷한 사람이 읽은 책',
-            'desc': '그렇습니다',
             'books': [BookSerializer(Book.objects.get(id=book['book'])).data for book in books]
         })
         
