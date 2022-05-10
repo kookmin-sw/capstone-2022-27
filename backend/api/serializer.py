@@ -24,7 +24,7 @@ class BookSerializer(serializers.ModelSerializer):
     keywords = serializers.StringRelatedField(many=True, read_only=True, required=False)
     class Meta:
         model = Book
-        fields = ('id', 'image', 'title', 'isbn', 'author', 'publisher', 'pubdate', 'genre', 'intro', 'desc', 'desc_pub', 'desc_index', 'category', 'kdc', 'keywords')
+        fields = ('id', 'image', 'title', 'subtitle', 'isbn', 'author', 'publisher', 'pubdate', 'genre', 'intro', 'desc', 'desc_pub', 'desc_index', 'category', 'kdc', 'keywords')
         read_only_fields = ('id',)
 
 class BookSimpleSerializer(serializers.ModelSerializer):
@@ -32,7 +32,7 @@ class BookSimpleSerializer(serializers.ModelSerializer):
     keywords = serializers.StringRelatedField(many=True, read_only=True, required=False)
     class Meta:
         model = Book
-        fields = ('id', 'image', 'title', 'isbn', 'author', 'publisher', 'pubdate', 'keywords')
+        fields = ('id', 'image', 'title', 'subtitle', 'isbn', 'author', 'publisher', 'pubdate', 'keywords')
         read_only_fields = ('id',)
 
 class BookDetailSerializer(serializers.Serializer):
@@ -44,7 +44,6 @@ class BookDetailSerializer(serializers.Serializer):
     
 class BookLineSerializer(serializers.Serializer):
     title = serializers.CharField()
-    desc = serializers.CharField()
     books = BookSimpleSerializer(many=True)
     
 class MainSerializer(serializers.Serializer):

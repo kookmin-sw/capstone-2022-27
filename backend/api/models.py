@@ -6,6 +6,7 @@ class Book(Model):
     id = models.BigIntegerField(primary_key=True) # 플라이북 책 id
     image = CharField(max_length=400, blank=True) # 이미지 URL
     title = CharField(max_length=400) # 책 제목
+    subtitle = CharField(max_length=400) # 책 부제목
     isbn = CharField(max_length=200) # 책 ISBN
     author = CharField(max_length=200) # 책 저자
     publisher = CharField(max_length=200) # 책 출판사
@@ -17,6 +18,8 @@ class Book(Model):
     desc_index = TextField(blank=True) # 책 목차
     kdc = CharField(max_length=200, blank=True) # KDC 번호
     category = CharField(max_length=200, blank=True) # 카테고리 (KDC 대분류)
+    num_review = IntegerField(default=0) # 리뷰 수
+    
 class User(Model):
     age = IntegerField(blank=True, null=True)
     sex = CharField(max_length=100, null=True, blank=True)
