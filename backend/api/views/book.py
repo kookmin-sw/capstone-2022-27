@@ -1,9 +1,9 @@
 from .api import res, api, P
 from .core import get_data, post_data
-from django.db.models import F, Count, Q
+from django.db.models import F, Count, Q, Value, IntegerField
 from django.forms.models import model_to_dict
 from ..models import Book, User, Review, Keyword
-from ..serializer import BookSerializer, BookSimpleSerializer, BookDetailSerializer, ReviewSerializer, SimpleSerializer, MainSerializer, BookLineSerializer
+from ..serializer import BookSerializer, BookSimpleSerializer, BookDetailSerializer, ReviewSerializer, SimpleSerializer, MainSerializer, BookLineSerializer, SearchSerializer
 import json
 
 @api(
@@ -31,39 +31,73 @@ def detail(req, id:int, token):
             hope = True
             
     reviews = []
-    for review in book.reviews.order_by('-created_at')[:15]:
+    all_reviews = Review.objects.filter(book=book, content__isnull=False).exclude(content__exact='')
+    for review in all_reviews.order_by('-created_at')[:3]:
         reviews.append({
             'user_name': review.user.username if review.user.booka else 'test',
             'read_state': review.read_state,
             'score': review.score,
             'created_at': review.created_at,
+            'content': review.content,
         })
     
     data = {
         'book': BookSerializer(book).data,
         'similar': BookSimpleSerializer(similar_books, many=True).data,
         'reviews': ReviewSerializer(reviews, many=True).data,
+        'num_reviews': all_reviews.count(),
         'hope': hope,
     }
     
     return res(data)
 
 @api(
+    name="리뷰 페이지",
+    method='GET',
+    params=[
+        P('id', t='integer', desc='책의 id'),
+        P('page', t='integer', desc='페이지 번호'),
+    ],
+    response=ReviewSerializer(many=True),
+    errors={
+        1: '알 수 없는 에러',
+    }
+)
+def review_pages(req, id:int, page):
+    book = Book.objects.get(id=id)            
+    reviews = []
+    all_reviews = Review.objects.filter(book=book, content__isnull=False).exclude(content__exact='')
+    for review in all_reviews.order_by('-created_at')[page*3:(page+1)*3]:
+        reviews.append({
+            'user_name': review.user.username if review.user.booka else 'test',
+            'read_state': review.read_state,
+            'score': review.score,
+            'created_at': review.created_at,
+            'content': review.content,
+        })
+
+    return res(ReviewSerializer(reviews, many=True).data)
+
+@api(
     name="책 키워드 검색",
     method='GET',
     params=[
-        P('keywords', t='string', desc='검색할 키워드, 쉼표로 구분'),
+        P('keyword', t='string', desc='검색할 키워드'),
         P('page', t='integer', desc='검색 조회 페이지'),
     ],
-    response=BookSimpleSerializer(many=True),
+    response=SearchSerializer,
     errors={
         1: '알 수 없는 에러',
     },
 )
-def search_keyword(req, keywords:str, page:int):
-    books = [book for book in Book.objects.filter(keywords__keyword__in=keywords.split(',')).annotate(num_reviews=Count('reviews')).order_by('-num_reviews')[page*10:(page+1)*10]]
+def search_keyword(req, keyword:str, page:int):
+    books_queryset = Book.objects.filter(keywords__keyword=keyword)
+    books = [book for book in books_queryset.annotate(num_reviews=Count('reviews')).order_by('-num_reviews')[page*10:(page+1)*10]]
     
-    data = BookSimpleSerializer(books, many=True).data
+    data = SearchSerializer({
+        'books': BookSimpleSerializer(books, many=True).data,
+        'count': len(books_queryset),
+    }).data
     
     return res(data)
 
@@ -74,15 +108,19 @@ def search_keyword(req, keywords:str, page:int):
         P('keyword', t='string', desc='검색할 내용'),
         P('page', t='integer', desc='검색 조회 페이지'),
     ],
-    response=BookSimpleSerializer(many=True),
+    response=SearchSerializer,
     errors={
         1: '알 수 없는 에러',
     },
 )
 def search(req, keyword:str, page:int):
-    books = [BookSimpleSerializer(book).data for book in Book.objects.filter(Q(title__icontains=keyword) | Q(author__icontains=keyword) | Q(desc__icontains=keyword)).annotate(num_reviews=Count('reviews')).order_by('-num_reviews')[page*10:(page+1)*10]]
-
-    data = BookSimpleSerializer(books, many=True).data
+    books_queryset = Book.objects.filter(Q(title__icontains=keyword)).annotate(type=Value(0, output_field=IntegerField())) | Book.objects.filter(Q(author__icontains=keyword)).annotate(type=Value(1, output_field=IntegerField()))| Book.objects.filter(Q(publisher__icontains=keyword)).annotate(type=Value(2, output_field=IntegerField()))
+    books = [book for book in books_queryset.annotate(num_reviews=Count('reviews')).order_by('type', '-num_reviews')[page*10:(page+1)*10]]
+    
+    data = SearchSerializer({
+        'books': BookSimpleSerializer(books, many=True).data,
+        'count': len(books_queryset),
+    }).data
     
     return res(data)
 
@@ -90,7 +128,7 @@ def search(req, keyword:str, page:int):
     name="첫 페이지 (취향 찾기)",
     method='POST',
     params=[
-        P('selected_books', t='list', desc='선택한 책의 목록'),
+        P('selected_books', t='string', desc='선택한 책의 목록'),
     ],
     response=SimpleSerializer,
     errors={
