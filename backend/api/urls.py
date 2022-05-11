@@ -13,4 +13,5 @@ urlpatterns = [
     path('book/firstpage/', book.firstpage),
     path('book/firstpage_list/', book.firstpage_list),
     path('book/mainpage/', book.mainpage),
+    path('book/review/', book.review),
 ]
