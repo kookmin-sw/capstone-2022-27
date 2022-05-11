@@ -4,6 +4,7 @@ from django.db.models import F, Count, Q, Value, IntegerField
 from django.forms.models import model_to_dict
 from ..models import Book, User, Review, Keyword
 from ..serializer import BookSerializer, BookSimpleSerializer, BookDetailSerializer, ReviewSerializer, SimpleSerializer, MainSerializer, BookLineSerializer, SearchSerializer
+from .rand_nick import gen
 import json
 
 @api(
@@ -34,7 +35,7 @@ def detail(req, id:int, token):
     all_reviews = Review.objects.filter(book=book, content__isnull=False).exclude(content__exact='')
     for review in all_reviews.order_by('-created_at')[:3]:
         reviews.append({
-            'user_name': review.user.username if review.user.booka else 'test',
+            'user_name': review.user.nickname if review.user.booka else gen(review.user.id),
             'read_state': review.read_state,
             'score': review.score,
             'created_at': review.created_at,
@@ -144,7 +145,9 @@ def firstpage(req, selected_books, token):
         return res(code=2, msg='토큰 에러')
     try:   
         selected_books = json.loads(selected_books)
-        post_data(f'cossim/makeasa/{token["id"]}', selected_books)
+        as_a = post_data(f'cossim/makeasa/{token["id"]}', selected_books)
+        user.as_a = as_a
+        user.save()
         for book_id in selected_books:
             Review(user=user, book=Book.objects.get(id=book_id), read_state='읽었어요', score=10).save()
         
@@ -186,13 +189,13 @@ def mainpage(req, token):
     except:
         return res(code=2, msg='토큰 에러')
     try:
-        
+        core_id = user.as_a if user.as_a else user.id
         line_general = BookLineSerializer({
             'title': '그냥 젤 많이 읽을만한 거',
-            'books': [BookSerializer(Book.objects.get(id=book_id)).data for book_id, score in get_data(f'gnn/usertobooks/{token["id"]}')[:30]]
+            'books': [BookSerializer(Book.objects.get(id=book_id)).data for book_id, score in get_data(f'gnn/usertobooks/{core_id}')[:30]]
         })
         
-        line_similar_users = get_data(f'gnn/usertousers/{token["id"]}')
+        line_similar_users = get_data(f'gnn/usertousers/{core_id}')
         users_set = set(map(lambda x: x[0], line_similar_users))
         books = Review.objects.filter(user__in=users_set).values('book').distinct().annotate(num_reviews=Count('book')).order_by('-num_reviews')[:30]
         line_similar_read = BookLineSerializer({
