@@ -4,6 +4,7 @@ from django.db.models import F, Count, Q, Value, IntegerField
 from django.forms.models import model_to_dict
 from ..models import Book, User, Review, Keyword
 from ..serializer import BookSerializer, BookSimpleSerializer, BookDetailSerializer, ReviewSerializer, SimpleSerializer, MainSerializer, BookLineSerializer, SearchSerializer
+from .rand_nick import gen
 import json
 
 @api(
@@ -34,19 +35,32 @@ def detail(req, id:int, token):
     all_reviews = Review.objects.filter(book=book, content__isnull=False).exclude(content__exact='')
     for review in all_reviews.order_by('-created_at')[:3]:
         reviews.append({
-            'user_name': review.user.username if review.user.booka else 'test',
+            'user_name': review.user.nickname if review.user.booka else gen(review.user.id),
             'read_state': review.read_state,
             'score': review.score,
             'created_at': review.created_at,
             'content': review.content,
         })
     
+    try:
+        my_review = Review.objects.get(book=book, user=user)
+        my_review = ReviewSerializer({
+                'user_name': my_review.user.nickname,
+                'read_state': my_review.read_state,
+                'score': my_review.score,
+                'created_at': my_review.created_at,
+                'content': my_review.content,
+            }).data
+    except Exception as e:
+        print(e)
+        my_review = None
+    
     data = {
         'book': BookSerializer(book).data,
         'similar': BookSimpleSerializer(similar_books, many=True).data,
         'reviews': ReviewSerializer(reviews, many=True).data,
-        'num_reviews': all_reviews.count(),
         'hope': hope,
+        'my_review': my_review,
     }
     
     return res(data)
@@ -144,7 +158,9 @@ def firstpage(req, selected_books, token):
         return res(code=2, msg='토큰 에러')
     try:   
         selected_books = json.loads(selected_books)
-        post_data(f'cossim/makeasa/{token["id"]}', selected_books)
+        as_a = post_data(f'cossim/makeasa/{token["id"]}', selected_books)
+        user.as_a = as_a
+        user.save()
         for book_id in selected_books:
             Review(user=user, book=Book.objects.get(id=book_id), read_state='읽었어요', score=10).save()
         
@@ -163,7 +179,7 @@ def firstpage(req, selected_books, token):
 )
 def firstpage_list(req):
     try:
-        data = BookSimpleSerializer(Book.objects.annotate(num_reviews=Count('reviews')).order_by('-num_reviews')[:50], many=True).data
+        data = BookSimpleSerializer(Book.objects.order_by('-num_review')[:50], many=True).data
         return res(data)
     except:
         return res(code=1, msg='알 수 없는 에러')
@@ -185,27 +201,71 @@ def mainpage(req, token):
         user = User.objects.get(id=token['id'])
     except:
         return res(code=2, msg='토큰 에러')
+    # try:
+    core_id = user.as_a if user.as_a else user.id
+    
+    read_books = set(Review.objects.filter(user=user, read_state='읽었어요').prefetch_related('book').values_list('book', flat=True))
+    
+    def read_filter(books):
+        return list(filter(lambda x: x[0] not in read_books, books))
+    
+    line_general = BookLineSerializer({
+        'title': '그냥 젤 많이 읽을만한 거',
+        'books': [BookSimpleSerializer(Book.objects.get(id=book_id)).data for book_id, score in read_filter(get_data(f'gnn/usertobooks/{core_id}'))[:20]]
+    })
+    
+    line_similar_users = get_data(f'gnn/usertousers/{core_id}')
+    users_set = set(map(lambda x: x[0], line_similar_users))
+    books = Review.objects.filter(Q(user__in=users_set)).select_related('book').order_by('-book__num_review')[:20]
+    line_similar_read = BookLineSerializer({
+        'title': '비슷한 사람이 읽은 책',
+        'books': BookSimpleSerializer(set([book.book for book in books]), many=True).data
+    })
+    
+    data = MainSerializer({
+        'banner': [],
+        'lines': [line_general.data, line_similar_read.data]
+    }).data
+    
+    return res(data)
+    # except Exception as e:
+    #     print(e)
+    #     return res(code=1)
+    
+@api(
+    name="리뷰 작성",
+    method='POST',
+    params=[
+        P('book_id', t='integer', desc='책 id'),
+        P('state', t='string', desc='읽은 상태'),
+        P('score', t='integer', desc='별점(1~10)'),
+        P('content', t='string', desc='리뷰 내용'),
+    ],
+    response=BookSimpleSerializer(many=True),
+    errors={
+        1: '알 수 없는 에러'
+    },
+    auth=True
+)
+def review(req, book_id, state, content, score, token):
     try:
-        
-        line_general = BookLineSerializer({
-            'title': '그냥 젤 많이 읽을만한 거',
-            'books': [BookSerializer(Book.objects.get(id=book_id)).data for book_id, score in get_data(f'gnn/usertobooks/{token["id"]}')[:30]]
-        })
-        
-        line_similar_users = get_data(f'gnn/usertousers/{token["id"]}')
-        users_set = set(map(lambda x: x[0], line_similar_users))
-        books = Review.objects.filter(user__in=users_set).values('book').distinct().annotate(num_reviews=Count('book')).order_by('-num_reviews')[:30]
-        line_similar_read = BookLineSerializer({
-            'title': '비슷한 사람이 읽은 책',
-            'books': [BookSerializer(Book.objects.get(id=book['book'])).data for book in books]
-        })
-        
-        data = MainSerializer({
-            'banner': [],
-            'lines': [line_general.data, line_similar_read.data]
-        }).data
-        
-        return res(data)
+        user = User.objects.get(id=token['id'])
+    except:
+        return res(code=2, msg='토큰 에러')
+    try:
+        book = Book.objects.get(id=book_id)
+        try:
+            my_review = Review.objects.get(book=book, user=user)
+        except:
+            my_review = None
+        if my_review:
+            my_review.read_state = state
+            my_review.content = content
+            my_review.score = score if state == '읽었어요' else 0
+            my_review.save()
+        else:
+            Review(book=book, user=user, read_state=state, score=score, content=content).save()
+        return res()
     except Exception as e:
         print(e)
-        return res(code=1)
+        return res(code=1, msg='알 수 없는 에러')

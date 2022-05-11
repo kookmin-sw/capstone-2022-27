@@ -28,17 +28,12 @@ def cosine_distance_sparse(record1, record2):
 class CosineSimilarity:
     all_user = set()
     records = dict()
-    as_a = dict()
     
     @classmethod
     def init(cls):
         t1 = time()
         cls.all_user = pkl.load(open('data/user_1.pkl', 'rb'))
         cls.records:dict = pkl.load(open('data/user_3_records.pkl', 'rb'))
-        try:
-            cls.as_a = pkl.load(open('data/tmp/as_a.pkl', 'rb')) # 다음 전체 임베딩 계산 전까지 유지
-        except:
-            cls.as_a = dict()
         t2 = time()
         t = t2 - t1
         print(f'Cossim ready in {t} seconds.')
@@ -48,9 +43,6 @@ class CosineSimilarity:
         if user_idx in cls.records:
             return user_idx
         
-        if user_idx in cls.as_a:
-            return cls.as_a[user_idx]
-        
         user_rec = make_record(records)
         
         max_similar = (-1, 0)
@@ -59,17 +51,11 @@ class CosineSimilarity:
             if sim >= max_similar[1]:
                 max_similar = (other_idx, sim)
         
-        cls.as_a[user_idx] = max_similar[0]
-        pkl.dump(cls.as_a, open('data/tmp/as_a.pkl', 'wb'))
         return max_similar[0]
     
     @classmethod
-    def query_as_a(cls, user_idx):
-        if user_idx in cls.records:
-            return user_idx
-        if user_idx not in cls.as_a:
-            return None
-        return cls.as_a[user_idx]
+    def is_inner_user(cls, user_idx):
+        return user_idx in cls.records
 
 if __name__ == "__main__":
     pass

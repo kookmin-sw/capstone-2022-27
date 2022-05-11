@@ -29,6 +29,7 @@ class User(Model):
     username = CharField(max_length=200, null=True, blank=True)
     nickname = CharField(max_length=200, null=True, blank=True)
     password = CharField(max_length=400, null=True, blank=True)
+    as_a = IntegerField(null=True, blank=True)
     
 class Review(Model):
     book = ForeignKey('Book', on_delete=models.CASCADE, related_name='reviews')

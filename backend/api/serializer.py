@@ -24,7 +24,7 @@ class BookSerializer(serializers.ModelSerializer):
     keywords = serializers.StringRelatedField(many=True, read_only=True, required=False)
     class Meta:
         model = Book
-        fields = ('id', 'image', 'title', 'subtitle', 'isbn', 'author', 'publisher', 'pubdate', 'genre', 'intro', 'desc', 'desc_pub', 'desc_index', 'category', 'kdc', 'keywords')
+        fields = ('id', 'image', 'title', 'subtitle', 'isbn', 'author', 'publisher', 'pubdate', 'genre', 'intro', 'desc', 'desc_pub', 'desc_index', 'category', 'kdc', 'keywords', 'num_review')
         read_only_fields = ('id',)
 
 class BookSimpleSerializer(serializers.ModelSerializer):
@@ -40,7 +40,6 @@ class BookDetailSerializer(serializers.Serializer):
     hope = serializers.BooleanField()
     similar = BookSimpleSerializer(many=True)
     reviews = ReviewSerializer(many=True)
-    num_reviews = serializers.IntegerField()
     
 class BookLineSerializer(serializers.Serializer):
     title = serializers.CharField()
