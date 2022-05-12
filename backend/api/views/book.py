@@ -5,6 +5,7 @@ from django.forms.models import model_to_dict
 from ..models import Book, User, Review, Keyword
 from ..serializer import BookSerializer, BookSimpleSerializer, BookDetailSerializer, ReviewSerializer, SimpleSerializer, MainSerializer, BookLineSerializer, SearchSerializer
 from .rand_nick import gen
+import random
 import json
 
 @api(
@@ -209,9 +210,11 @@ def mainpage(req, token):
     def read_filter(books):
         return list(filter(lambda x: x[0] not in read_books, books))
     
+    books = [BookSimpleSerializer(Book.objects.get(id=book_id)).data for book_id, score in read_filter(get_data(f'gnn/usertobooks/{core_id}'))[:30]]
+    random.shuffle(books)
     line_general = BookLineSerializer({
         'title': '그냥 젤 많이 읽을만한 거',
-        'books': [BookSimpleSerializer(Book.objects.get(id=book_id)).data for book_id, score in read_filter(get_data(f'gnn/usertobooks/{core_id}'))[:20]]
+        'books': books[:20]
     })
     
     def read_filter(books):
@@ -219,10 +222,12 @@ def mainpage(req, token):
     
     line_similar_users = get_data(f'gnn/usertousers/{core_id}')
     users_set = set(map(lambda x: x[0], line_similar_users))
-    books = Review.objects.filter(Q(user__in=users_set)).select_related('book').order_by('-book__num_review')[:20]
+    books = list(set([book.book for book in Review.objects.filter(Q(user__in=users_set)).select_related('book').order_by('-book__num_review')[:30]]))
+    random.shuffle(books)
+    books = books[:20]
     line_similar_read = BookLineSerializer({
         'title': '비슷한 사람이 읽은 책',
-        'books': read_filter(BookSimpleSerializer(set([book.book for book in books]), many=True).data)
+        'books': read_filter(BookSimpleSerializer(books, many=True).data)
     })
     
     data = MainSerializer({
