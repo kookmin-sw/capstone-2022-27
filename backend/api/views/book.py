@@ -214,12 +214,15 @@ def mainpage(req, token):
         'books': [BookSimpleSerializer(Book.objects.get(id=book_id)).data for book_id, score in read_filter(get_data(f'gnn/usertobooks/{core_id}'))[:20]]
     })
     
+    def read_filter(books):
+        return list(filter(lambda x: x['id'] not in read_books, books))
+    
     line_similar_users = get_data(f'gnn/usertousers/{core_id}')
     users_set = set(map(lambda x: x[0], line_similar_users))
     books = Review.objects.filter(Q(user__in=users_set)).select_related('book').order_by('-book__num_review')[:20]
     line_similar_read = BookLineSerializer({
         'title': '비슷한 사람이 읽은 책',
-        'books': BookSimpleSerializer(set([book.book for book in books]), many=True).data
+        'books': read_filter(BookSimpleSerializer(set([book.book for book in books]), many=True).data)
     })
     
     data = MainSerializer({
