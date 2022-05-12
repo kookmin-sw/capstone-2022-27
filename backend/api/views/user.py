@@ -3,6 +3,7 @@ from django.db.models import F, Count
 from ..models import User
 from ..serializer import SimpleSerializer, AccountSerializer
 from argon2 import PasswordHasher
+from .core import get_data, post_data
 import jwt, os
 
 SECRET = os.getenv('DJANGO_SECRET_KEY')
@@ -60,6 +61,9 @@ def login(req, username:str, password:str):
     except:
         return res(code=3, msg='비밀번호 일치하지 않음')
     try:
+        if get_data(f'is_inner_user/{user.id}') == 'True':
+            user.as_a = None
+            user.save()
         return res(AccountSerializer({
             'token': jwt.encode({'username': user.username, 'id': user.id}, SECRET, algorithm='HS256').decode('utf-8'),
             'is_first': user.reviews.count() == 0,
