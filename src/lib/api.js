@@ -179,7 +179,7 @@ const bookSearchKeywords = async (keywords, page) => {
 }
 
 const mainpage = async () => {
-    return safe_return(axios.get(`${BASEURL}book/mainpage/`, { headers: { TOKEN: token}}))
+    return safe_return(axios.get(`${BASEURL}book/mainpage/`, { headers: { TOKEN: token}, withCredentials: true}))
 }
 
 const login = async (username, password ) => {
