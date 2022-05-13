@@ -1,6 +1,8 @@
 <script>
     import { register  } from '../lib/api'
     import { goto } from '$app/navigation';
+    import { stores_nickname, stores_TOKEN } from '../lib/stores.js'
+
 
     let id=""
     let username=""
@@ -8,11 +10,41 @@
     let passwordCheck=""
     let registerFailed = false
     let errorMsg=''
+
+    function isInputValide(start, end, value) {
+      return (start<=value && value<=end)
+    }
+
     async function registerClick() {
+      registerFailed = false
+      console.log(id.length)
+      if(!isInputValide(2,20,id.length)){
+        registerFailed = true
+        errorMsg = "아이디는 2글자 이상 20글자 이하여야 합니다."
+        return;
+      }
+      else if(!isInputValide(2, 10, username.length)){
+        registerFailed = true
+        errorMsg = "닉네임은 2글자 이상 10글자 이하여야 합니다."
+        return;
+      }
+      else if(!isInputValide(6,20,password.length)){
+        registerFailed = true
+        errorMsg = "비밀번호는 6글자 이상 20글자 이하여야 합니다."
+        return;
+      }
+      else if(password != passwordCheck){
+        registerFailed = true
+        errorMsg = "비밀번호와 비밀번호 확인이 같지 않습니다."
+        return;
+      }
+
       try {
         registerFailed = false
         const res = await register(id, username, password)
-        goto(`/login`)
+        stores_TOKEN.update(x => res.token)
+        stores_nickname.update(x => res.nickname)
+        goto(`/first`)
       } catch (e) {
         registerFailed=true
         errorMsg = e.msg
@@ -30,7 +62,7 @@
   <h1>회원가입</h1>
   <div class="content">
     <div class="input-field">
-      <input type="text" placeholder="아이디(4-20)" autocomplete="nope" bind:value="{id}">
+        <input type="text" placeholder="아이디(4-20)" autocomplete="nope" bind:value="{id}">
     </div>
     <div class="input-field">
       <input type="text" placeholder="닉네임(2-10)" autocomplete="nope" bind:value="{username}">
@@ -41,11 +73,11 @@
     <div class="input-field">
         <input type="password" placeholder="비밀번호 확인(6-20)" autocomplete="nope" bind:value="{passwordCheck}">
     </div>
+
     {#if registerFailed}
       <div class="error">{errorMsg}</div>
     {/if}
     
-    <div class="error"></div>
   </div>
   <div class="action">
     <button on:click="{registerClick}">가입하기</button>
@@ -77,6 +109,7 @@
 }
 .error{
   color: red;
+  display: flex;
 }
 .login-form h1 {
   padding: 35px 35px 0 35px;
