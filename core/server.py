@@ -8,8 +8,8 @@ from models.cosine_similarity import CosineSimilarity
 app = Flask(__name__)
 
 # 결과에 주어질 최대 개수
-N_BOOK = 5000
-N_USER = 5000
+N_BOOK = 200
+N_USER = 200
 
 if __name__ == "__main__":
     GNN.init()
@@ -23,6 +23,10 @@ def whitelist():
 @app.route('/gnn/usertobooks/<int:user_idx>')
 def gnn_user_to_books(user_idx):
     return json.dumps(GNN.user_to_books(user_idx)[:N_BOOK])
+
+@app.route('/gnn/usertobooks/<int:user_idx>/<float:alpha>')
+def gnn_user_to_books_baseline(user_idx, alpha):
+    return json.dumps(GNN.user_to_books(user_idx, alpha)[:N_BOOK])
 
 @app.route('/gnn/booktobooks/<int:book_idx>')
 def gnn_book_to_books(book_idx):

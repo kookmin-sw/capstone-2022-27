@@ -37,7 +37,7 @@ class BookSimpleSerializer(serializers.ModelSerializer):
 
 class BookDetailSerializer(serializers.Serializer):
     book = BookSerializer()
-    hope = serializers.BooleanField()
+    my_review = ReviewSerializer()
     similar = BookSimpleSerializer(many=True)
     reviews = ReviewSerializer(many=True)
     
