@@ -43,7 +43,7 @@ export let bgColor=""
 <style>
     .container .col:nth-child(1) { flex-grow: 1; background-color: #9EA4AA; width: 15rem;}
     .container .col:nth-child(2) { flex-grow: 1; background-color: #26282B; width: 42rem;}
-    .container .col:nth-child(3) { flex-grow: 1; background-color: #E9EBED; width: 18rem;}
+    .container .col:nth-child(3) { flex-grow: 1; background-color: #E9EBED; width: 15rem;}
 
     .container {
         /* display: flex; */
@@ -76,11 +76,10 @@ export let bgColor=""
         justify-content: center;
     }
     .left-banner{
-        margin-left: 2rem;
+        padding: 3.3rem 1.5rem;
     }
     .right-desc-container{
-        margin-left: 1.5rem;
-        margin-top: 3.3rem;
+        padding: 3.3rem 1.5rem;
     }
     .centered {
         position: absolute;

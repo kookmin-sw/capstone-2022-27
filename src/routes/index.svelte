@@ -1,11 +1,19 @@
-<div class="content">
+<script>
+    import Banner from '$lib/components/Banner.svelte'
+    import RecomList from '$lib/components/RecomList.svelte'
+    import { mainBannerMockup, recomsMockup, mainpage } from '../lib/api'
     
-        {#await initBanner}
-            <p>loading..</p>
-        {:then banner}
-            <Banner img={banner.image} desc={banner.desc} 
-            keywords={banner.keyword} bgColor = {banner.bgColor} />
-        {/await}
+    const init = mainpage()
+    const initBanner=  mainBannerMockup()
+</script>
+
+<div class="content">    
+    {#await initBanner}
+        <p>loading..</p>
+    {:then banner}
+        <Banner img={banner.image} desc={banner.desc} 
+        keywords={banner.keyword} bgColor = {banner.bgColor} />
+    {/await}
     
     
     <div class='container'>
@@ -18,7 +26,7 @@
                     {#await init}
                         <p>waiting..</p>
                     {:then recoms}
-                        {#each recoms as recom}
+                        {#each recoms.lines as recom}
                             <div class='recomlist'><RecomList recom={recom}/></div>
                         {/each}
                     {:catch error}
@@ -31,31 +39,26 @@
     </div>
 </div>
 
-<script>
-    import Banner from '$lib/components/Banner.svelte'
-    import RecomList from '$lib/components/RecomList.svelte'
-    import { mainBannerMockup, recomsMockup } from '../lib/api'
-    
-    const init = recomsMockup()
-    const initBanner=  mainBannerMockup()
-</script>
-
 <style>
+    
     .container .col:nth-child(1) { flex-grow: 1; width: 15rem;}
-    .container .col:nth-child(2) { flex-grow: 1; width: 42rem;}
-    .container .col:nth-child(3) { flex-grow: 1; width: 18rem;}
+    .container .col:nth-child(2) {
+        flex-grow: 1; width: 42rem;
+    }
+    .container .col:nth-child(3) { flex-grow: 1; width: 15rem;}
 
     .container {
         /* display: flex; */
-        display: inline-flex;
+        display: flex;
         align-items: center;
     }
+
     .content {
         display: flex;
         flex-direction: column;
     }
 
-    :global(.row) {
+    .row {
         display: flex;
         flex-wrap: nowrap;
         flex-direction: row;
@@ -77,7 +80,6 @@
         margin-left: 1.5rem;
     }
     .recomlist{
-        margin-bottom: 3rem;
+        /* margin-bottom: 3rem; */
     }
-
 </style>
