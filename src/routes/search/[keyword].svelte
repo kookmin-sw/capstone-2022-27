@@ -1,6 +1,7 @@
 <script>
-    import { bookSearch, bookSearchKeywords} from '$lib/api'
+    import { bookSearch, bookSearchKeywords, booksMockup} from '$lib/api'
     import { page } from '$app/stores';
+    import SearchBookList from '$lib/components/SearchBookList.svelte';
     let keyword = $page.params.keyword
     let pageNum = 0 
 
@@ -17,18 +18,7 @@
         {#await bookSearchP}
             loading...
         {:then books} 
-            {#each books as book}
-                <div class="image" style="background-image: url('{book['image']}');"/>
-                <div>
-                    <div class='title'>{book.title}</div>
-                    <div class='author'>{book.author} 지음 {book.publisher} 펴냄</div>
-                    <div class="keywords">
-                        {#each book['keywords'] as keyword}
-                            <a href='keyword/{keyword}' class='keyword'>#{keyword} </a>
-                        {/each}
-                    </div>
-                </div>
-            {/each}
+           <SearchBookList books = {books.books}/>
         {/await}
     </div>
 </div>
@@ -59,6 +49,7 @@
     .image{
         width: 8.25rem;
         height: 11.875rem;
+        margin-right: 1.5rem;
     }
     .title{
         font-family: 'Pretendard';
@@ -99,5 +90,11 @@
         line-height: 14px;
         text-align: center;
         margin-right: 0.7rem;
+    }
+    .row{
+        display: flex;
+        flex-direction: row;
+        margin-bottom: 2.25rem;
+        /* justify-content: space-between; */
     }
 </style>
