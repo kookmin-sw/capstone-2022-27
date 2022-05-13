@@ -40,21 +40,25 @@
 </div>
 
 <style>
+    
     .container .col:nth-child(1) { flex-grow: 1; width: 15rem;}
-    .container .col:nth-child(2) { flex-grow: 1; width: 42rem;}
-    .container .col:nth-child(3) { flex-grow: 1; width: 18rem;}
+    .container .col:nth-child(2) {
+        flex-grow: 1; width: 42rem;
+    }
+    .container .col:nth-child(3) { flex-grow: 1; width: 15rem;}
 
     .container {
         /* display: flex; */
-        display: inline-flex;
+        display: flex;
         align-items: center;
     }
+
     .content {
         display: flex;
         flex-direction: column;
     }
 
-    :global(.row) {
+    .row {
         display: flex;
         flex-wrap: nowrap;
         flex-direction: row;
@@ -76,7 +80,6 @@
         margin-left: 1.5rem;
     }
     .recomlist{
-        margin-bottom: 3rem;
+        /* margin-bottom: 3rem; */
     }
-
 </style>

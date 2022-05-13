@@ -1,7 +1,7 @@
 <script>
     import { login  } from '../lib/api'
     import { goto } from '$app/navigation';
-    import { TOKEN } from '../lib/stores.js'
+    import { stores_TOKEN, stores_nickname } from '../lib/stores.js'
 
     let username=""
     let password = ""
@@ -11,7 +11,8 @@
       try {
         loginFailed = false
         const res = await login(username, password)
-        TOKEN.update(token => res.token)
+        stores_TOKEN.update(x => res.token)
+        stores_nickname.update(x => res.nickname)
         if(res.is_first){
           goto(`/first`)
         }
@@ -83,6 +84,7 @@
 }
 .error{
   color: red;
+  display: flex;
 }
 .login-form h1 {
   padding: 35px 35px 0 35px;
