@@ -1,11 +1,11 @@
 import axios from 'axios'
 import { identity } from 'svelte/internal'
-import { TOKEN } from './stores.js'
+import { stores_TOKEN } from './stores.js'
 
 const BASEURL = import.meta.env.VITE_API_URL+"api/"
 // const token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6Im5veWUxIiwiaWQiOjE0NzI2NDgzfQ.YHU6KxEIE1ndzBNdbP4-j7Rt4Uzf1QWgMZnDrwdvhtA"
 let token = ""
-TOKEN.subscribe(value => {
+stores_TOKEN.subscribe(value => {
     token = value;
 });
 
@@ -199,6 +199,18 @@ const register = async (username,nickname, password ) => {
      }))
 }
 
+const getFristPageList = async () => {
+    return safe_return(axios.get(`${BASEURL}book/firstpage_list/`, ))
+}
+const setFristPageList = async (selected_books) => {
+    return safe_return(axios.post(`${BASEURL}book/firstpage/`, 
+    {
+        selected_books : selected_books,
+        TOKEN : token,
+     },
+     { headers: { TOKEN: token,}, withCredentials: true}))
+}
+
 
 const mainBannerMockup = async () => {
     const book = {
@@ -235,4 +247,6 @@ export {
     mainpage,
     login,
     register,
+    getFristPageList, setFristPageList,
+
 }
