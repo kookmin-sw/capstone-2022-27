@@ -1,8 +1,13 @@
-<script>
+<script lang='ts'>
     export let recom
 import { bookDetail } from '$lib/api'
     import BookSmall from '$lib/components/BookSmall.svelte'
     import Color from '../../routes/Color.svelte'
+    import Flicking, { FlickingPanel } from "@egjs/svelte-flicking";
+    import "@egjs/svelte-flicking/dist/flicking.css";
+
+    let flicking= Flicking;
+    
 </script>
 
 <div class="content">
@@ -16,12 +21,16 @@ import { bookDetail } from '$lib/api'
         </div>
     {/if} -->
     <div class='reason'>{recom.title}</div>
-
     <div class='row'>
-        {#each recom.books as book}
+        <!-- <Flicking options={{ align: "center", circular: true }}> -->
+            {#each recom.books as book}
+            <!-- <FlickingPanel></FlickingPanel>     -->
             <a class='book' href={`/book/${book.id}`}>
-                <BookSmall image={book.image} title={book.title} author={book.author}/></a>
-        {/each}
+                    <BookSmall image={book.image} title={book.title} author={book.author}/></a>
+            <!-- </FlickingPanel> -->
+            {/each}
+        <!-- </Flicking> -->
+        <!-- <button on:click={() => { flicking.next(); }} /> -->
     </div>
 </div>
 
@@ -32,8 +41,18 @@ import { bookDetail } from '$lib/api'
         margin-top: 1rem;
         margin-bottom: 1rem;
     }
+    
+    .reason{
+        color: #1B1D1F;
+        font-family: 'Pretendard';
+        font-style: normal;
+        font-weight: 700;
+        font-size: 1rem;
+        margin-bottom: 1.25rem;
+    }
 
-    :global(.row) {
+    .row { 
+        overflow: scroll;
         display: flex;
         flex-wrap: nowrap;
         flex-direction: row;
@@ -45,14 +64,6 @@ import { bookDetail } from '$lib/api'
     }
     a{
         text-decoration: none !important;
-    }
-    .reason{
-        color: #1B1D1F;
-        font-family: 'Pretendard';
-        font-style: normal;
-        font-weight: 700;
-        font-size: 1rem;
-        margin-bottom: 1.25rem;
     }
     .book{
         margin-right: 1.125rem;
