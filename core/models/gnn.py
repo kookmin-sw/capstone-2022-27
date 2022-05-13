@@ -41,6 +41,7 @@ class GNN:
         t1 = time()
         cls.users_to_use = list(pkl.load(open('data/user_1.pkl', 'rb')))
         cls.books_to_use = list(pkl.load(open('data/book_3.pkl', 'rb')))
+        cls.book_baseline = pkl.load(open('data/baseline.pkl', 'rb'))
         
         cls.all_users = pkl.load(open('data/gnn_user.pkl', 'rb'))
         cls.all_books = pkl.load(open('data/gnn_book.pkl', 'rb'))
@@ -55,7 +56,7 @@ class GNN:
         print(f'Precomputation done in {t} seconds.')
         
     @classmethod
-    def user_to_books(cls, user_idx):
+    def user_to_books(cls, user_idx, alpha=0):
         if user_idx not in cls.all_users:
             return []
         if user_idx not in cls.pre_user_to_books:
@@ -68,7 +69,9 @@ class GNN:
                 user_books.append((book_idx, np.dot(user_ebd, book_ebd)))
             cls.pre_user_to_books[user_idx] = user_books
             print(f'User {user_idx} computed in {time() - t1} seconds.')
-        return sorted(cls.pre_user_to_books[user_idx], key=lambda x: x[1], reverse=True)
+        books = cls.pre_user_to_books[user_idx]
+        books = list(map(lambda x: (x[0], x[1] - (cls.book_baseline[x[0]] * alpha)), filter(lambda x: x[0] in cls.book_baseline, books)))
+        return sorted(books, key=lambda x: x[1], reverse=True)
 
     @classmethod
     def book_to_books(cls, book_idx):

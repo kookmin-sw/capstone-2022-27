@@ -237,6 +237,14 @@ def recommend(req, recom_type, token):
                 'books': read_filter(BookSimpleSerializer(books[:20], many=True).data)
             }).data
             return res(line)
+        elif recom_type == 3:
+            books = [BookSimpleSerializer(Book.objects.get(id=book_id)).data for book_id, score in read_id_filter(get_data(f'gnn/usertobooks/{core_id}/1.0'))[:30]]
+            random.shuffle(books)
+            line = BookLineSerializer({
+                'title': '당신만을 위한 추천 도서',
+                'books': books[:20]
+            }).data
+            return res(line)
         return res(code=4, msg='알 수 없는 추천 종류')
     except Exception as e:
         print(e)

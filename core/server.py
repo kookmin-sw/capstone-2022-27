@@ -24,6 +24,10 @@ def whitelist():
 def gnn_user_to_books(user_idx):
     return json.dumps(GNN.user_to_books(user_idx)[:N_BOOK])
 
+@app.route('/gnn/usertobooks/<int:user_idx>/<float:alpha>')
+def gnn_user_to_books_baseline(user_idx, alpha):
+    return json.dumps(GNN.user_to_books(user_idx, alpha)[:N_BOOK])
+
 @app.route('/gnn/booktobooks/<int:book_idx>')
 def gnn_book_to_books(book_idx):
     return json.dumps(GNN.book_to_books(book_idx)[:N_BOOK])
