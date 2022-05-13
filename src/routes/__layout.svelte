@@ -1,41 +1,83 @@
 <script>
-    // export let userId=0
-    // export let userToken=""
-
     import { profileMockup } from '../lib/api'
     import '../../static/fonts/pretendard-subset.css'
+    import { goto } from '$app/navigation';
+    import { stores_TOKEN, stores_nickname } from '$lib/stores';
+
+    let _nickname, token=''
+    stores_TOKEN.subscribe(value => {
+        token = value;
+    });
+    stores_nickname.subscribe(value => {
+        _nickname = value;
+    });
+
     let profileInit = profileMockup()
     let searchWord = ""
+
+    function gotoSearch(){
+        if(searchWord.charAt(0) == '#'){
+            goto('/search/keyword/'+searchWord.substring(1))
+        } else{
+            goto('/search/'+searchWord)
+        }
+
+    }
+
+    function logout(){
+        _nickname='', token=''
+        stores_TOKEN.update(x => '')
+        stores_nickname.update(x => '')
+        goto('login')
+    }
+
+    const onKeyPress = e => {
+    if (e.charCode === 13) gotoSearch() // 13 : enterKey
+    };
+    
 </script>
 
 <nav class='container'>
     <div class='col'></div>
-    <div class='col' >
+    <div class='col space-between' >
         <div class='booka'>
-            <img class ='booka-img' src="../../static/booka.svg" alt=''/>
+            <a href="/"><img class ='booka-img' src="../../static/booka.svg" alt=''/></a>
         </div>
-        <div class='search vertical-center-parent'> 
-            <img src="../../static/search.svg" alt=''/>
-            <input type="text" name="" placeholder="책 제목 또는 '#키워드'로 검색하세요"  class="custom-input">
-        </div>
-            <div class='profile vertical-center'>
-                {#await profileInit};
-                {:then profile} 
-                    <div class="circle "></div>
-                    <div class='username'>{profile.username}</div>
-                {/await}
+        <div class='right'>
+            <div class='search vertical-center-parent'> 
+                <img src="../../static/search.svg" alt=''/>
+                <input type="text" name="" on:keypress={onKeyPress} bind:value="{searchWord}"
+                placeholder="책 제목 또는 '#키워드'로 검색하세요"  class="custom-input">
             </div>
+            {#if token != ''}
+                <div class='profile vertical-center'>
+                    {#await profileInit};
+                    {:then profile} 
+                        <div class="circle "></div>
+                        <div class='username'>{_nickname}</div>
+                        <div class="logout" on:click={logout}>로그아웃</div>
+                    {/await}
+                </div>
+            {:else}
+                <div class='profile vertical-center'>
+                    <a href="/login"><div>로그인</div></a>
+                </div>
+            {/if}
+        </div>
     </div>
     <div class='col'></div>
-    
 </nav>
 
 <slot></slot>
 
 <style>
     .container .col:nth-child(1) { flex-grow: 1; width: 15rem;}
-    .container .col:nth-child(2) { flex-grow: 1; width: 42rem;}
-    .container .col:nth-child(3) { flex-grow: 1; width: 18rem;}
+    .container .col:nth-child(2) {
+         flex-grow: 1;
+         width: 42rem;
+         justify-content: space-between;
+    }
+    .container .col:nth-child(3) { flex-grow: 1; width: 15rem;}
 
     .container {
         display: flex;
@@ -44,8 +86,11 @@
 
     .col{
         display: flex;
-        /* justify-content: center; */
         align-items: center;
+    }
+    .space-between{
+        display: flex;
+        justify-content: space-between;
     }
 
     nav {
@@ -54,9 +99,8 @@
         background-color: #37DBFF;
     }
     .right{
-        text-align: right;
-        margin-left: auto; 
-        margin-right: 0;
+        display: inline-flex;
+        align-items: center;
     }
     .profile{
         display: flex;
@@ -64,13 +108,26 @@
         flex-direction: row;
     }
     .username{
-        margin-left: 1rem;
-        margin-right: 1rem;
+        margin-left: .3rem;
+        margin-right: .3rem;
         font-size: 2rem;
         font-style: normal;
         font-weight: 600;
         font-size: 0.75rem;
-        line-height: 0.875rem;
+        line-height: 1rem;
+        vertical-align: middle;
+    }
+    .logout{
+        margin-left: .3rem;
+        margin-right: .5rem;
+        font-size: 2rem;
+        font-style: normal;
+        font-weight: 600;
+        font-size: 0.75rem;
+        line-height: 1rem;
+        vertical-align: middle;
+        color: #444;
+        cursor: pointer;
     }
     .circle{
         width:1.25rem;
@@ -123,4 +180,9 @@
         height:1.31rem;
         
     }
+    
+
+:global(a){
+    text-decoration: none;
+}
 </style>
