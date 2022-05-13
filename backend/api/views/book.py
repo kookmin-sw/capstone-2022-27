@@ -238,8 +238,8 @@ def recommend(req, recom_type, token):
             }).data
             return res(line)
         elif recom_type == 3:
-            books = [BookSimpleSerializer(Book.objects.get(id=book_id)).data for book_id, score in read_id_filter(get_data(f'gnn/usertobooks/{core_id}/1.0'))[:30]]
-            random.shuffle(books)
+            books = [BookSimpleSerializer(Book.objects.get(id=book_id)).data for book_id, score in read_id_filter(get_data(f'gnn/usertobooks/{core_id}/10.0'))[:30]]
+            # random.shuffle(books)
             line = BookLineSerializer({
                 'title': '당신만을 위한 추천 도서',
                 'books': books[:20]
