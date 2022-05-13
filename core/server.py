@@ -8,8 +8,8 @@ from models.cosine_similarity import CosineSimilarity
 app = Flask(__name__)
 
 # 결과에 주어질 최대 개수
-N_BOOK = 5000
-N_USER = 5000
+N_BOOK = 200
+N_USER = 200
 
 if __name__ == "__main__":
     GNN.init()

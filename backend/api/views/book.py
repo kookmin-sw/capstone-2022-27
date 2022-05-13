@@ -23,14 +23,13 @@ import json
 def detail(req, id:int, token):
     book = Book.objects.get(id=id)
     
+    try:
+        user = User.objects.get(id=token['id'])
+    except:
+        return res(code=2, msg='토큰 에러')
+    
     core_res = get_data(f'gnn/booktobooks/{book.id}')[:10]
     similar_books = [Book.objects.get(id=book_id) for book_id, score in core_res]
-    
-    hope = False # 유저가 읽고싶은지 여부
-    if token:
-        user = User.objects.get(id=token['id'])
-        if len(Review.objects.filter(user=user, book=book, read_state='읽고싶어요')) > 0:
-            hope = True
             
     reviews = []
     all_reviews = Review.objects.filter(book=book, content__isnull=False).exclude(content__exact='')
@@ -44,7 +43,7 @@ def detail(req, id:int, token):
         })
     
     try:
-        my_review = Review.objects.get(book=book, user=user)
+        my_review = Review.objects.filter(book=book, user=user).order_by('-created_at')[0]
         my_review = ReviewSerializer({
                 'user_name': my_review.user.nickname,
                 'read_state': my_review.read_state,
@@ -60,7 +59,6 @@ def detail(req, id:int, token):
         'book': BookSerializer(book).data,
         'similar': BookSimpleSerializer(similar_books, many=True).data,
         'reviews': ReviewSerializer(reviews, many=True).data,
-        'hope': hope,
         'my_review': my_review,
     }
     
@@ -185,61 +183,65 @@ def firstpage_list(req):
     except:
         return res(code=1, msg='알 수 없는 에러')
 
-
 @api(
-    name="메인페이지",
+    name="추천 책",
     method='GET',
-    params=[],
-    response=MainSerializer,
+    params=[
+        P('recom_type', t='integer', desc='추천 종류')
+    ],
+    response=BookSimpleSerializer(many=True),
     errors={
-        1: '알 수 없는 에러',
-        2: '계정 관련 에러'
+        1: '알 수 없는 에러'
     },
     auth=True
 )
-def mainpage(req, token):
+def recommend(req, recom_type, token):
     try:
         user = User.objects.get(id=token['id'])
+        core_id = user.as_a if user.as_a else user.id
     except:
         return res(code=2, msg='토큰 에러')
-    # try:
-    core_id = user.as_a if user.as_a else user.id
-    
-    read_books = set(Review.objects.filter(user=user, read_state='읽었어요').prefetch_related('book').values_list('book', flat=True))
-    
-    def read_filter(books):
-        return list(filter(lambda x: x[0] not in read_books, books))
-    
-    books = [BookSimpleSerializer(Book.objects.get(id=book_id)).data for book_id, score in read_filter(get_data(f'gnn/usertobooks/{core_id}'))[:30]]
-    random.shuffle(books)
-    line_general = BookLineSerializer({
-        'title': '그냥 젤 많이 읽을만한 거',
-        'books': books[:20]
-    })
-    
-    def read_filter(books):
-        return list(filter(lambda x: x['id'] not in read_books, books))
-    
-    line_similar_users = get_data(f'gnn/usertousers/{core_id}')
-    users_set = set(map(lambda x: x[0], line_similar_users))
-    books = list(set([book.book for book in Review.objects.filter(Q(user__in=users_set)).select_related('book').order_by('-book__num_review')[:30]]))
-    random.shuffle(books)
-    books = books[:20]
-    line_similar_read = BookLineSerializer({
-        'title': '비슷한 사람이 읽은 책',
-        'books': read_filter(BookSimpleSerializer(books, many=True).data)
-    })
-    
-    data = MainSerializer({
-        'banner': [],
-        'lines': [line_general.data, line_similar_read.data]
-    }).data
-    
-    return res(data)
-    # except Exception as e:
-    #     print(e)
-    #     return res(code=1)
-    
+    try:
+        read_books = set(Review.objects.filter(user=user, read_state='읽었어요').prefetch_related('book').values_list('book', flat=True))
+        def read_id_filter(books):
+            return list(filter(lambda x: x[0] not in read_books, books))
+        def read_filter(books):
+            return list(filter(lambda x: x['id'] not in read_books, books))
+        
+        if recom_type == 0:
+            books = [BookSimpleSerializer(Book.objects.get(id=book_id)).data for book_id, score in read_id_filter(get_data(f'gnn/usertobooks/{core_id}'))[:30]]
+            random.shuffle(books)
+            line = BookLineSerializer({
+                'title': 'BOOKA BEST 추천',
+                'books': books[:20]
+            }).data
+            return res(line)
+        elif recom_type == 1:
+            line_similar_users = get_data(f'gnn/usertousers/{core_id}')
+            users_set = set(map(lambda x: x[0], line_similar_users))
+            books = list(set([book.book for book in Review.objects.filter(Q(user__in=users_set)).select_related('book').order_by('-book__num_review')[:30]]))
+            random.shuffle(books)
+            books = books[:20]
+            line = BookLineSerializer({
+                'title': '비슷한 사람이 읽은 책',
+                'books': read_filter(BookSimpleSerializer(books, many=True).data)
+            }).data
+            return res(line)
+        elif recom_type == 2:
+            book = Review.objects.filter(user=user).order_by('?')[:1].get().book
+            books = get_data(f'gnn/booktobooks/{book.id}')[:30]
+            random.shuffle(books)
+            books = [Book.objects.get(id=book_id) for book_id, score in books]
+            line = BookLineSerializer({
+                'title': f'{book.title}: 이 책과 비슷한 책',
+                'books': read_filter(BookSimpleSerializer(books[:20], many=True).data)
+            }).data
+            return res(line)
+        return res(code=4, msg='알 수 없는 추천 종류')
+    except Exception as e:
+        print(e)
+        return res(code=1)
+
 @api(
     name="리뷰 작성",
     method='POST',
