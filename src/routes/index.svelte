@@ -1,36 +1,85 @@
-<div class="content">
-    <h1>Booka Gazua~</h1>
-    <Card className="row">
-        {#await init}
-            <p>waiting..</p>
-        {:then books}
-            {#each books as book}
-                <a href={`./book/${book.id}`}><BookSmall image={book.image} title={book.title} /></a>
-            {/each}
-        {:catch error}
-            <p>error: {error.message}</p>
-        {/await}
-    </Card>
-</div>
-
 <script>
-    import BookSmall from '$lib/components/BookSmall.svelte'
-    import Card from '$lib/components/Card.svelte'
-    import { booksMockup } from '../lib/api'
+    import Banner from '$lib/components/Banner.svelte'
+    import RecomList from '$lib/components/RecomList.svelte'
+    import { mainBannerMockup, recomsMockup, mainpage } from '../lib/api'
     
-    const init = booksMockup()
+    const init = mainpage()
+    const initBanner=  mainBannerMockup()
 </script>
 
+<div class="content">    
+    {#await initBanner}
+        <p>loading..</p>
+    {:then banner}
+        <Banner img={banner.image} desc={banner.desc} 
+        keywords={banner.keyword} bgColor = {banner.bgColor} />
+    {/await}
+    
+    
+    <div class='container'>
+        <div class='col'></div>
+        <div class='col'>
+            <div class=''>
+                <div class='recomlists'>
+                    <p class='foryou'>당신을 위한 추천</p>
+                    <hr style="borderr:solid 1px #26282B">
+                    {#await init}
+                        <p>waiting..</p>
+                    {:then recoms}
+                        {#each recoms.lines as recom}
+                            <div class='recomlist'><RecomList recom={recom}/></div>
+                        {/each}
+                    {:catch error}
+                        <p>error: {error.message}</p>
+                    {/await}
+                </div>
+            </div>
+        </div>
+        <div class='col'></div>
+    </div>
+</div>
+
 <style>
+    
+    .container .col:nth-child(1) { flex-grow: 1; width: 15rem;}
+    .container .col:nth-child(2) {
+        flex-grow: 1; width: 42rem;
+    }
+    .container .col:nth-child(3) { flex-grow: 1; width: 15rem;}
+
+    .container {
+        /* display: flex; */
+        display: flex;
+        align-items: center;
+    }
+
     .content {
-        margin: 1rem;
         display: flex;
         flex-direction: column;
     }
 
-    :global(.row) {
+    .row {
         display: flex;
         flex-wrap: nowrap;
         flex-direction: row;
+    }
+    .foryou{
+        font-family: 'Pretendard';
+        font-style: normal;
+        font-weight: 700;
+        font-size: 1rem;
+        line-height: 1.25px;
+    }
+
+    .horizontal-center {
+        display: flex;
+        justify-content: center;
+    }
+    .recomlists{
+        margin-top: 3rem;
+        margin-left: 1.5rem;
+    }
+    .recomlist{
+        /* margin-bottom: 3rem; */
     }
 </style>
