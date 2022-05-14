@@ -50,7 +50,7 @@ class GNN:
         t1 = time()
         cls.users_to_use = list(pkl.load(open('data/user_1.pkl', 'rb')))
         cls.books_to_use = list(pkl.load(open('data/book_3.pkl', 'rb')))
-        cls.book_baseline = pkl.load(open('data/baseline.pkl', 'rb'))
+        cls.book_baseline = dict(filter(lambda x: x[0] in cls.books_to_use, pkl.load(open('data/baseline.pkl', 'rb')).items()))
         
         # normalize book baseline
         cls.book_baseline = dict(zip(cls.book_baseline.keys(), normalize(cls.book_baseline.values())))

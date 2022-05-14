@@ -209,7 +209,7 @@ def recommend(req, recom_type, token):
             return list(filter(lambda x: x['id'] not in read_books, books))
         
         if recom_type == 0:
-            books = [BookSimpleSerializer(Book.objects.get(id=book_id)).data for book_id, score in read_id_filter(get_data(f'gnn/usertobooks/{core_id}'))[:30]]
+            books = [BookSimpleSerializer(Book.objects.get(id=book_id)).data for book_id, score in read_id_filter(get_data(f'gnn/usertobooks/{core_id}/0.0'))[:30]]
             random.shuffle(books)
             line = BookLineSerializer({
                 'title': 'BOOKA BEST 추천',
