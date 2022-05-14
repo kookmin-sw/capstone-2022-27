@@ -182,6 +182,21 @@ const mainpage = async () => {
     return safe_return(axios.get(`${BASEURL}book/mainpage/`, { headers: { TOKEN: token}, withCredentials: true}))
 }
 
+const writeReview = async (book_id, state, score, content) => {
+    return safe_return(axios.post(`${BASEURL}book/review/`, 
+    {
+        book_id : book_id,
+        state : state,
+        score : score,
+        content: content,
+    },
+    { 
+        headers: { TOKEN: token},
+        withCredentials: true,
+    }
+    ))
+}
+
 const login = async (username, password ) => {
     return safe_return(axios.post(`${BASEURL}user/login/`, 
     {
@@ -248,5 +263,6 @@ export {
     login,
     register,
     getFristPageList, setFristPageList,
+    writeReview
 
 }

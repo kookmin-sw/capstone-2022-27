@@ -6,10 +6,10 @@
     import BookSmall from '$lib/components/BookSmall.svelte';
     import Review from '$lib/components/Review.svelte';
     import Rating from '$lib/components/Rating.svelte'
+import BookStatusBtn from '$lib/components/BookStatusBtn.svelte';
 
     let id = $page.params.id
     const bookP = bookDetail(id)
-    let btnColors = ['#FF68CC', '#37DBFF', '#23E771']
 
     function handleMessage(event) {
 		alert(event.detail.text);
@@ -34,18 +34,11 @@
                         {/each}
                     </div>
                     <div class='col button_container'>
-                        {#if !true}
-                            <div class='btn btn-selected'>
-                                <img alt='' src='/static/hope_selected.svg' >
-                                <div style='color:{btnColors[0]}'>읽고싶어요</div>
-                            </div>
-                        {/if}
-
-                        {#if true}
-                        <div class='btn'>
-                            <img alt='' src='../static/hope.svg' >
-                            <div>읽고싶어요</div>
-                        </div>
+                        {#if book.my_review == null}
+                            <BookStatusBtn book_id={book.book.id} status='' content=''/>
+                        {:else}
+                            <BookStatusBtn book_id={book.book.id} status={book.my_review.read_state}
+                                rating={book.my_review.score} content={book.my_review.content}/>
                         {/if}
                     </div>
 
@@ -84,7 +77,7 @@
                     <div id='review-word-count'>/1000</div>
                     <div id='review-btn'>리뷰 등록</div>
                 </div>
-            </div>
+                </div>
             
             <div class='similar'>
                 <div class='title'>비슷한 책</div>
@@ -209,39 +202,6 @@
         color: #1B1D1F;
     }
 
-    .btn{
-        display: flex;
-        align-items: center; 
-        justify-content: center;
-        border: 0.5px solid #1B1D1F;
-        box-sizing: border-box;
-        border-radius: 2px;
-        width: 5.813rem;
-        height: 2.25rem;
-    }
-    .btn div{
-        font-family: 'Pretendard';
-        font-style: normal;
-        font-weight: 400;
-        font-size: 0.813rem;
-        line-height: 1.063rem;
-    }
-    .btn img{
-        margin-right: 0.25rem;
-    }
-    .btn-selected{
-        background-color: #26282B;
-    }
-
-    .btn-selected div{
-        font-family: 'Pretendard';
-        font-style: normal;
-        font-weight: 700;
-        font-size: 0.813rem;
-        line-height: 1.063rem;
-        text-align: center;
-    }
-
     .button_container{
         margin-top: 2rem;
     }
@@ -325,5 +285,6 @@
     display: flex;
     flex-shrink: 0;
 }
+
     
 </style>

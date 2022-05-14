@@ -1,7 +1,21 @@
 <script>
+import { goto } from '$app/navigation';
+
     import Banner from '$lib/components/Banner.svelte'
     import RecomList from '$lib/components/RecomList.svelte'
     import { mainBannerMockup, recomsMockup, mainpage } from '../lib/api'
+    import { stores_first } from '../lib/stores.js'
+
+    let isfirst
+    stores_first.subscribe(value => {
+        isfirst = value;
+    });
+    
+    console.log(isfirst)
+    if(isfirst=='true'){
+        goto('/first')
+    }
+
     
     const init = mainpage()
     const initBanner=  mainBannerMockup()
