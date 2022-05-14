@@ -1,7 +1,7 @@
 <script>
     import { login  } from '../lib/api'
     import { goto } from '$app/navigation';
-    import { stores_TOKEN, stores_nickname } from '../lib/stores.js'
+    import { stores_TOKEN, stores_nickname, stores_first } from '../lib/stores.js'
 
     let username=""
     let password = ""
@@ -13,6 +13,7 @@
         const res = await login(username, password)
         stores_TOKEN.update(x => res.token)
         stores_nickname.update(x => res.nickname)
+        stores_first.update(x => res.is_first)
         if(res.is_first){
           goto(`/first`)
         }
