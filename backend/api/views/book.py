@@ -228,7 +228,7 @@ def recommend(req, recom_type, token):
             }).data
             return res(line)
         elif recom_type == 2:
-            book = Review.objects.filter(user=user).order_by('?')[:1].get().book
+            book = Review.objects.filter(user=user).order_by('?')[:1].select_related('book').get().book
             books = get_data(f'gnn/booktobooks/{book.id}')[:30]
             random.shuffle(books)
             books = [Book.objects.get(id=book_id) for book_id, score in books]
@@ -238,11 +238,22 @@ def recommend(req, recom_type, token):
             }).data
             return res(line)
         elif recom_type == 3:
-            books = [BookSimpleSerializer(Book.objects.get(id=book_id)).data for book_id, score in read_id_filter(get_data(f'gnn/usertobooks/{core_id}/10.0'))[:30]]
+            books = [BookSimpleSerializer(Book.objects.get(id=book_id)).data for book_id, score in read_id_filter(get_data(f'gnn/usertobooks/{core_id}/1.0'))[:40]]
             # random.shuffle(books)
             line = BookLineSerializer({
                 'title': '당신만을 위한 추천 도서',
-                'books': books[:20]
+                'books': books[:40]
+            }).data
+            return res(line)
+        elif recom_type == 4:
+            book = Review.objects.filter(user=user).order_by('?')[:1].select_related('book').get().book
+            print(book.title)
+            keyword = book.keywords.all()[0]
+            print(keyword)
+            # random.shuffle(books)
+            line = BookLineSerializer({
+                'title': f'#{keyword}',
+                'books': read_filter(BookSimpleSerializer(Book.objects.filter(keywords=keyword).order_by('-num_review')[:30], many=True).data)
             }).data
             return res(line)
         return res(code=4, msg='알 수 없는 추천 종류')
