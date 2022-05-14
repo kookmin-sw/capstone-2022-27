@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+from corsheaders.defaults import default_headers
 import os
 from pathlib import Path
 from dotenv import load_dotenv
@@ -153,4 +154,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ORIGIN_WHITELIST = ['http://127.0.0.1:3000' ,'http://localhost:3000']
 CORS_ALLOW_CREDENTIALS = True
 
-CORS_ALLOW_HEADERS = ['TOKEN']
+CORS_ALLOW_HEADERS = list(default_headers) + ['TOKEN']

@@ -2,6 +2,7 @@
 import { goto } from '$app/navigation';
 
     import { getFristPageList, setFristPageList } from '../lib/api'
+    import { stores_TOKEN, stores_nickname, stores_first } from '../lib/stores.js'
     let books
     let loaded = false
 
@@ -20,6 +21,7 @@ import { goto } from '$app/navigation';
             }
         }
         await setFristPageList(JSON.stringify(selectedBooks))
+        stores_first.update(x => 'true')
         goto('/')
     }
 </script>
