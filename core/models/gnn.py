@@ -5,17 +5,16 @@ from tqdm import tqdm
 
 def normalize(lst):
     res = []
+    lst = list(lst)
     mean = np.mean(lst)
     std = np.std(lst)
-    for item in lst:
-        normalized_val = (item - mean) / std
-        normalized.append(normalized_num)
-    return res
+    
+    return [(item - mean) / std for item in lst]
+
 class GNN:
     books_to_use = set()
     users_to_use = set()
     book_baseline = dict()
-    baseline_mean = 0
     all_users = []
     all_books = []
     users = []
@@ -52,10 +51,9 @@ class GNN:
         cls.users_to_use = list(pkl.load(open('data/user_1.pkl', 'rb')))
         cls.books_to_use = list(pkl.load(open('data/book_3.pkl', 'rb')))
         cls.book_baseline = pkl.load(open('data/baseline.pkl', 'rb'))
-        # min_baseline = min(cls.book_baseline.values())
-        # for k, v in cls.book_baseline.items():
-        #     cls.book_baseline[k] = v - min_baseline
-        cls.baseline_mean = sum(cls.book_baseline.values()) / len(cls.book_baseline)
+        
+        # normalize book baseline
+        cls.book_baseline = dict(zip(cls.book_baseline.keys(), normalize(cls.book_baseline.values())))
         
         cls.all_users = pkl.load(open('data/gnn_user.pkl', 'rb'))
         cls.all_books = pkl.load(open('data/gnn_book.pkl', 'rb'))
@@ -84,10 +82,11 @@ class GNN:
             cls.pre_user_to_books[user_idx] = sorted(user_books, key=lambda x: x[1], reverse=True)
             print(f'User {user_idx} computed in {time() - t1} seconds.')
         books = cls.pre_user_to_books[user_idx]
-        books_mean = sum(book[1] for book in books) / len(books)
-        # scale = books_mean / cls.baseline_mean
-        scale = books[0][1] / cls.book_baseline[books[0][0]]
-        books = list(map(lambda x: (x[0], x[1] - (cls.book_baseline[x[0]] * scale * alpha)), filter(lambda x: x[0] in cls.book_baseline, books)))
+        
+        # normalize books
+        books = zip([book[0] for book in books], normalize([book[1] for book in books]))
+        
+        books = list(map(lambda x: (x[0], x[1] - (cls.book_baseline[x[0]] * alpha)), filter(lambda x: x[0] in cls.book_baseline, books)))
         return sorted(books, key=lambda x: x[1], reverse=True)
 
     @classmethod
