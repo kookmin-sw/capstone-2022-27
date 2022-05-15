@@ -6,8 +6,8 @@
     import BookSmall from '$lib/components/BookSmall.svelte';
     import Review from '$lib/components/Review.svelte';
     import Rating from '$lib/components/Rating.svelte'
-import BookStatusBtn from '$lib/components/BookStatusBtn.svelte';
-import BookList from '$lib/components/BookList.svelte';
+    import BookStatusBtn from '$lib/components/BookStatusBtn.svelte';
+    import BookList from '$lib/components/BookList.svelte';
 
     let id = $page.params.id
     let loaded=false;
@@ -54,7 +54,7 @@ import BookList from '$lib/components/BookList.svelte';
                     <div class="author"><b>{book['book']['author']}</b> 지음 | <b>{book['book']['publisher']}</b> 펴냄 </div>
                     <div class="keywords">
                         {#each book['book']['keywords'] as keyword}
-                            <a href=' ' class='keyword'>#{keyword} </a>
+                            <a href='/search/keyword/{keyword}' class='keyword'>#{keyword} </a>
                         {/each}
                     </div>
                     <div class='col button_container'>
@@ -390,5 +390,7 @@ label.enabled:hover ~ input:checked ~ label /* highlight previous selected stars
 fieldset {
     padding: 0;
 }
+
+
     
 </style>

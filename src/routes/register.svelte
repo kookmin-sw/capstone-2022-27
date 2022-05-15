@@ -1,7 +1,7 @@
 <script>
     import { register  } from '../lib/api'
     import { goto } from '$app/navigation';
-    import { stores_nickname, stores_TOKEN } from '../lib/stores.js'
+    import { stores_first, stores_nickname, stores_TOKEN } from '../lib/stores.js'
 
 
     let id=""
@@ -44,6 +44,7 @@
         const res = await register(id, username, password)
         stores_TOKEN.update(x => res.token)
         stores_nickname.update(x => res.nickname)
+        stores_first.update(x => res.is_first)
         goto(`/first`)
       } catch (e) {
         registerFailed=true

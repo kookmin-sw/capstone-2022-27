@@ -2,7 +2,7 @@
     import { profileMockup } from '../lib/api'
     import '../../static/fonts/pretendard-subset.css'
     import { goto } from '$app/navigation';
-    import { stores_TOKEN, stores_nickname } from '$lib/stores';
+    import { stores_TOKEN, stores_nickname, stores_first } from '$lib/stores';
 
     let _nickname, token=''
     stores_TOKEN.subscribe(value => {
@@ -28,6 +28,7 @@
         _nickname='', token=''
         stores_TOKEN.update(x => '')
         stores_nickname.update(x => '')
+        stores_first.update(x => 'false')
         goto('login')
     }
 
