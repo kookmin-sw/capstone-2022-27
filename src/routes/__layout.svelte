@@ -184,5 +184,14 @@
 
 :global(a){
     text-decoration: none;
+    color: #26282B;
+}
+:global(a:link){
+    text-decoration: none;
+    color: #26282B;
+}
+:global(a:visited){
+    text-decoration: none;
+    color: #26282B;
 }
 </style>
