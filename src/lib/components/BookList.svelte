@@ -1,39 +1,33 @@
 <script lang='ts'>
-    // export let recom
-    export let recom_type
-    import { mainpage } from '$lib/api'
     import BookSmall from '$lib/components/BookSmall.svelte'
     import Flicking, { FlickingPanel } from "@egjs/svelte-flicking";
     import "@egjs/svelte-flicking/dist/flicking.css";
 
     let flicking= Flicking;
-    const init = mainpage(recom_type)
+    export let books
+
+    console.log(books)
     
 </script>
 
 <div class="content">
-    {#await init}
-        
-    {:then recom} 
-        <div class='reason'>{recom.title}</div>
-        <div class='btn prev' on:click={() => { flicking.moveTo(flicking.index-6); }} >
-            <img class='btn-img' src="/static/prev.svg"/>
-        </div>
-        <div class='row'>
-            <Flicking bind:this={flicking} options={{ align: "prev", circular: false, defaultIndex:2 }}>
-                {#each recom.books as book}
-                <FlickingPanel style="margin: 0 .5rem; display:flex; align-items:center;">
-                    <a class='book' href={`/book/${book.id}`}>
-                        <BookSmall image={book.image} title={book.title} author={book.author}/>
-                    </a>
-                </FlickingPanel>
-                {/each}
-            </Flicking>
-        </div>
-        <div class='btn next'  on:click={() => { flicking.moveTo(flicking.index+6); }} >
-            <img class='btn-img' src="/static/next.svg"/>
-        </div>
-    {/await}
+    <div class='btn prev' on:click={() => { flicking.moveTo(flicking.index-6); }} >
+        <img class='btn-img' src="/static/prev.svg"/>
+    </div>
+    <div class='row'>
+        <Flicking bind:this={flicking} options={{ align: "prev", circular: false, defaultIndex:2 }}>
+            {#each books as book}
+            <FlickingPanel style="margin: 0 .5rem; display:flex; align-items:center;">
+                <a class='book' href={`/book/${book.id}`}>
+                    <BookSmall image={book.image} title={book.title} author={book.author}/>
+                </a>
+            </FlickingPanel>
+            {/each}
+        </Flicking>
+    </div>
+    <div class='btn next'  on:click={() => { flicking.moveTo(flicking.index+6); }} >
+        <img class='btn-img' src="/static/next.svg"/>
+    </div>
     
 </div>
 
@@ -62,6 +56,7 @@
         align-items: center;
         flex-wrap: nowrap;
         flex-direction: row;
+        width: 55rem;
     }
     div{
         font-size: 0.8rem;

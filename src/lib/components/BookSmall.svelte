@@ -27,6 +27,8 @@ export let author
     background-size: cover;
     width: 6rem;
     height: 9rem;
+    border-radius: 0 10px 10px 0;
+    filter: drop-shadow(0px 2px 3px rgba(27, 29, 31, 0.3));
 }
 
 .title {

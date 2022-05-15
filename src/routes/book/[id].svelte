@@ -7,6 +7,7 @@
     import Review from '$lib/components/Review.svelte';
     import Rating from '$lib/components/Rating.svelte'
 import BookStatusBtn from '$lib/components/BookStatusBtn.svelte';
+import BookList from '$lib/components/BookList.svelte';
 
     let id = $page.params.id
     let loaded=false;
@@ -102,7 +103,7 @@ import BookStatusBtn from '$lib/components/BookStatusBtn.svelte';
                     </div>
                 </div>
                 <div class='right'>
-                    <div id='review-word-count'>/1000</div>
+                    <div id='review-word-count'>{reviewContent.length}/10000</div>
                     <div id='review-btn' on:click='{writeReviewClicked}'><p>리뷰 등록</p></div>
                 </div>
                 </div>
@@ -111,9 +112,7 @@ import BookStatusBtn from '$lib/components/BookStatusBtn.svelte';
                 <div class='title'>비슷한 책</div>
                 <hr class='border'>
                 <div class='row'>
-                {#each book['similar'] as book}
-                    <a class='book' href={`./${book.id}`}><BookSmall image={book.image} title={book.title} author={book.author}/></a>
-                {/each}
+                <BookList books={book['similar']}/>
                 </div>
             </div>
         </div>
