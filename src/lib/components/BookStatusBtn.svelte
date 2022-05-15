@@ -57,7 +57,7 @@
             <fieldset class="rate">
                 {#each ratings as r}
                     <input type="radio" id="rand{randkey}{r}" disabled={!enabled} bind:group={rating} name="rand{randkey}" value="{r}" />
-                    <label for="rand{randkey}{r}" on:click="{reviewBtnClicked}" class="{r%2==1?'half':''} {enabled?'enabled':'disabled'}"></label>
+                    <label for="rand{randkey}{r}" class="{r%2==1?'half':''} {enabled?'enabled':'disabled'}"></label>
                 {/each}
             </fieldset>
         </div>

@@ -1,12 +1,13 @@
 <script lang='ts'>
-    export let recom
-import { bookDetail } from '$lib/api'
+    // export let recom
+    export let recom_type
+    import { mainpage } from '$lib/api'
     import BookSmall from '$lib/components/BookSmall.svelte'
-    import Color from '../../routes/Color.svelte'
     import Flicking, { FlickingPanel } from "@egjs/svelte-flicking";
     import "@egjs/svelte-flicking/dist/flicking.css";
 
     let flicking= Flicking;
+    const init = mainpage(recom_type)
     
 </script>
 
@@ -20,18 +21,23 @@ import { bookDetail } from '$lib/api'
             {/each}
         </div>
     {/if} -->
-    <div class='reason'>{recom.title}</div>
-    <div class='row'>
-        <!-- <Flicking options={{ align: "center", circular: true }}> -->
-            {#each recom.books as book}
-            <!-- <FlickingPanel></FlickingPanel>     -->
-            <a class='book' href={`/book/${book.id}`}>
-                    <BookSmall image={book.image} title={book.title} author={book.author}/></a>
-            <!-- </FlickingPanel> -->
-            {/each}
-        <!-- </Flicking> -->
-        <!-- <button on:click={() => { flicking.next(); }} /> -->
-    </div>
+    {#await init}
+        
+    {:then recom} 
+        <div class='reason'>{recom.title}</div>
+        <div class='row'>
+            <!-- <Flicking options={{ align: "center", circular: true }}> -->
+                {#each recom.books as book}
+                <!-- <FlickingPanel></FlickingPanel>     -->
+                <a class='book' href={`/book/${book.id}`}>
+                        <BookSmall image={book.image} title={book.title} author={book.author}/></a>
+                <!-- </FlickingPanel> -->
+                {/each}
+            <!-- </Flicking> -->
+            <!-- <button on:click={() => { flicking.next(); }} /> -->
+        </div>
+    {/await}
+    
 </div>
 
 <style>

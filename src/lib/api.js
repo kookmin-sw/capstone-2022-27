@@ -178,8 +178,8 @@ const bookSearchKeywords = async (keywords, page) => {
     return safe_return(axios.get(`${BASEURL}book/search_keyword/${keywords}/${page}`))
 }
 
-const mainpage = async () => {
-    return safe_return(axios.get(`${BASEURL}book/mainpage/`, { headers: { TOKEN: token}, withCredentials: true}))
+const mainpage = async (recom_type) => {
+    return safe_return(axios.get(`${BASEURL}book/recommend/${recom_type}`, { headers: { TOKEN: token}, withCredentials: true}))
 }
 
 const writeReview = async (book_id, state, score, content) => {
@@ -190,6 +190,15 @@ const writeReview = async (book_id, state, score, content) => {
         score : score,
         content: content,
     },
+    { 
+        headers: { TOKEN: token},
+        withCredentials: true,
+    }
+    ))
+}
+
+const getReviewPage = async (book_id, page) => {
+    return safe_return(axios.get(`${BASEURL}book/review_pages/${book_id}/${page}`, 
     { 
         headers: { TOKEN: token},
         withCredentials: true,
@@ -263,6 +272,6 @@ export {
     login,
     register,
     getFristPageList, setFristPageList,
-    writeReview
+    writeReview,getReviewPage
 
 }
