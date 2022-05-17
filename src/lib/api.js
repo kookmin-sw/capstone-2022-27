@@ -237,7 +237,8 @@ const setFristPageList = async (selected_books) => {
 
 
 const mainBannerMockup = async () => {
-    const book = {
+    const banners = [
+        {
             id: 0,
             image: 'https://image.aladin.co.kr/product/29045/74/cover500/k192836746_2.jpg',
             title: '불편한 편의점',
@@ -246,9 +247,42 @@ const mainBannerMockup = async () => {
             intro: '설명 별로 안긴거',
             desc: '설명 완전 긴거 블라블ㄹ라 <br> sfsdkfasfs<br>dsfadsfdsfsd <br> 최고의 책!\n',
             keyword: ['키워드1', '키워드2', '키워드3'],
-            bgColor: '#A9D0F5'
-        }
-    return book
+            bgColor: '#A9D0F5',
+            pointColor:'#24E772',
+            pointColor:'#24E772',
+            textColor:'#FFFFFF',
+        },
+        {
+            id: 0,
+            image: 'https://image.aladin.co.kr/product/29045/74/cover500/k192836746_2.jpg',
+            title: '불편한 편의점',
+            author: '김호연',
+            publisher: '나무옆의자',
+            intro: '설명 별로 안긴거',
+            desc: '설명 완전 긴거 블라블ㄹ라 <br> sfsdkfasfs<br>dsfadsfdsfsd <br> 최고의 책!\n',
+            keyword: ['키워드1', '키워드2', '키워드3'],
+            bgColor: '#A9D0F5',
+            pointColor:'#24E772',
+            pointColor:'#24E772',
+            textColor:'#FFFFFF',
+        },
+        {
+            id: 0,
+            image: 'https://image.aladin.co.kr/product/29045/74/cover500/k192836746_2.jpg',
+            title: '불편한 편의점',
+            author: '김호연',
+            publisher: '나무옆의자',
+            intro: '설명 별로 안긴거',
+            desc: '설명 완전 긴거 블라블ㄹ라 <br> sfsdkfasfs<br>dsfadsfdsfsd <br> 최고의 책!\n',
+            keyword: ['키워드1', '키워드2', '키워드3'],
+            bgColor: '#A9D0F5',
+            pointColor:'#24E772',
+            pointColor:'#24E772',
+            textColor:'#FFFFFF',
+        },
+
+    ]
+    return banners
 }
 
 const profileMockup = async () => {
