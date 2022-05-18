@@ -2,8 +2,8 @@ from .api import res, api, P
 from .core import get_data, post_data
 from django.db.models import F, Count, Q, Value, IntegerField
 from django.forms.models import model_to_dict
-from ..models import Book, User, Review, Keyword
-from ..serializer import BookSerializer, BookSimpleSerializer, BookDetailSerializer, ReviewSerializer, SimpleSerializer, MainSerializer, BookLineSerializer, SearchSerializer
+from ..models import Book, User, Review, Keyword, Banner
+from ..serializer import BookSerializer, BookSimpleSerializer, BookDetailSerializer, ReviewSerializer, SimpleSerializer, MainSerializer, BookLineSerializer, SearchSerializer, BannerSerializer
 from .rand_nick import gen
 import random
 import json
@@ -82,7 +82,7 @@ def review_pages(req, id:int, page):
     all_reviews = Review.objects.filter(book=book, content__isnull=False).exclude(content__exact='')
     for review in all_reviews.order_by('-created_at')[page*3:(page+1)*3]:
         reviews.append({
-            'user_name': review.user.username if review.user.booka else 'test',
+            'user_name': review.user.username if review.user.booka else gen(review.user.id),
             'read_state': review.read_state,
             'score': review.score,
             'created_at': review.created_at,
@@ -295,6 +295,31 @@ def review(req, book_id, state, content, score, token):
         else:
             Review(book=book, user=user, read_state=state, score=score, content=content).save()
         return res()
+    except Exception as e:
+        print(e)
+        return res(code=1, msg='알 수 없는 에러')
+    
+@api(
+    name="배너",
+    method='GET',
+    params=[],
+    response=BookSimpleSerializer(many=True),
+    errors={
+        1: '알 수 없는 에러'
+    }
+)
+def banners(req):
+    try:
+        banners = [{
+            'keywords': [banner.keywords.split()],
+            'color1': banner.color1,
+            'color2': banner.color2,
+            'content': banner.content,
+            'order': banner.order,
+            'book': BookSimpleSerializer(banner.book).data
+        } for banner in Banner.objects.all()]
+        banners.sort(key=lambda x: x['order'])
+        return res(banners)
     except Exception as e:
         print(e)
         return res(code=1, msg='알 수 없는 에러')
