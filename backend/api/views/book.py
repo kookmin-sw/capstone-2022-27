@@ -2,8 +2,8 @@ from .api import res, api, P
 from .core import get_data, post_data
 from django.db.models import F, Count, Q, Value, IntegerField
 from django.forms.models import model_to_dict
-from ..models import Book, User, Review, Keyword
-from ..serializer import BookSerializer, BookSimpleSerializer, BookDetailSerializer, ReviewSerializer, SimpleSerializer, MainSerializer, BookLineSerializer, SearchSerializer
+from ..models import Book, User, Review, Keyword, Banner
+from ..serializer import BookSerializer, BookSimpleSerializer, BookDetailSerializer, ReviewSerializer, SimpleSerializer, MainSerializer, BookLineSerializer, SearchSerializer, BannerSerializer
 from .rand_nick import gen
 import random
 import json
@@ -81,7 +81,7 @@ def review_pages(req, id:int, page):
     all_reviews = Review.objects.filter(book=book, content__isnull=False).exclude(content__exact='')
     for review in all_reviews.order_by('-created_at')[page*3:(page+1)*3]:
         reviews.append({
-            'user_name': review.user.username if review.user.booka else 'test',
+            'user_name': review.user.username if review.user.booka else gen(review.user.id),
             'read_state': review.read_state,
             'score': review.score,
             'created_at': review.created_at,
@@ -208,7 +208,7 @@ def recommend(req, recom_type, token):
             return list(filter(lambda x: x['id'] not in read_books, books))
         
         if recom_type == 0:
-            books = [BookSimpleSerializer(Book.objects.get(id=book_id)).data for book_id, score in read_id_filter(get_data(f'gnn/usertobooks/{core_id}'))[:30]]
+            books = [BookSimpleSerializer(Book.objects.get(id=book_id)).data for book_id, score in read_id_filter(get_data(f'gnn/usertobooks/{core_id}/0.0'))[:30]]
             random.shuffle(books)
             line = BookLineSerializer({
                 'title': 'BOOKA BEST 추천',
@@ -227,7 +227,7 @@ def recommend(req, recom_type, token):
             }).data
             return res(line)
         elif recom_type == 2:
-            book = Review.objects.filter(user=user).order_by('?')[:1].get().book
+            book = Review.objects.filter(user=user).order_by('?')[:1].select_related('book').get().book
             books = get_data(f'gnn/booktobooks/{book.id}')[:30]
             random.shuffle(books)
             books = [Book.objects.get(id=book_id) for book_id, score in books]
@@ -237,11 +237,22 @@ def recommend(req, recom_type, token):
             }).data
             return res(line)
         elif recom_type == 3:
-            books = [BookSimpleSerializer(Book.objects.get(id=book_id)).data for book_id, score in read_id_filter(get_data(f'gnn/usertobooks/{core_id}/10.0'))[:30]]
+            books = [BookSimpleSerializer(Book.objects.get(id=book_id)).data for book_id, score in read_id_filter(get_data(f'gnn/usertobooks/{core_id}/1.0'))[:40]]
             # random.shuffle(books)
             line = BookLineSerializer({
                 'title': '당신만을 위한 추천 도서',
-                'books': books[:20]
+                'books': books[:40]
+            }).data
+            return res(line)
+        elif recom_type == 4:
+            book = Review.objects.filter(user=user).order_by('?')[:1].select_related('book').get().book
+            print(book.title)
+            keyword = book.keywords.all()[0]
+            print(keyword)
+            # random.shuffle(books)
+            line = BookLineSerializer({
+                'title': f'#{keyword}',
+                'books': read_filter(BookSimpleSerializer(Book.objects.filter(keywords=keyword).order_by('-num_review')[:30], many=True).data)
             }).data
             return res(line)
         return res(code=4, msg='알 수 없는 추천 종류')
@@ -283,6 +294,31 @@ def review(req, book_id, state, content, score, token):
         else:
             Review(book=book, user=user, read_state=state, score=score, content=content).save()
         return res()
+    except Exception as e:
+        print(e)
+        return res(code=1, msg='알 수 없는 에러')
+    
+@api(
+    name="배너",
+    method='GET',
+    params=[],
+    response=BookSimpleSerializer(many=True),
+    errors={
+        1: '알 수 없는 에러'
+    }
+)
+def banners(req):
+    try:
+        banners = [{
+            'keywords': [banner.keywords.split()],
+            'color1': banner.color1,
+            'color2': banner.color2,
+            'content': banner.content,
+            'order': banner.order,
+            'book': BookSimpleSerializer(banner.book).data
+        } for banner in Banner.objects.all()]
+        banners.sort(key=lambda x: x['order'])
+        return res(banners)
     except Exception as e:
         print(e)
         return res(code=1, msg='알 수 없는 에러')

@@ -6,7 +6,7 @@ class Book(Model):
     id = models.BigIntegerField(primary_key=True) # 플라이북 책 id
     image = CharField(max_length=400, blank=True) # 이미지 URL
     title = CharField(max_length=400) # 책 제목
-    subtitle = CharField(max_length=400) # 책 부제목
+    subtitle = CharField(max_length=400, default='') # 책 부제목
     isbn = CharField(max_length=200) # 책 ISBN
     author = CharField(max_length=200) # 책 저자
     publisher = CharField(max_length=200) # 책 출판사
@@ -45,4 +45,11 @@ class Keyword(Model):
     
     def __str__(self):
         return self.keyword
-    
+
+class Banner(Model):
+    book = ForeignKey(Book, on_delete=models.CASCADE, related_name='banners')
+    color1 = CharField(max_length=100)
+    color2 = CharField(max_length=100)
+    content = TextField(null=True, default='')
+    keywords = TextField(null=True, default='')
+    order = IntegerField(default=0)

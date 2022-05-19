@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Book, User, Review
+from .models import Book, User, Review, Banner
 
 class SimpleSerializer(serializers.Serializer):
     content = serializers.JSONField()
@@ -52,6 +52,14 @@ class MainSerializer(serializers.Serializer):
 class SearchSerializer(serializers.Serializer):
     books = BookSimpleSerializer(many=True)
     count = serializers.IntegerField()
+    
+class BannerSerializer(serializers.ModelSerializer):
+    book = BookSimpleSerializer()
+    keywords = serializers.ListField(child=serializers.CharField())
+    class Meta:
+        model = Banner
+        fields = ('book', 'color1', 'color2', 'content', 'order', 'keywords')
+    
 
 # 리뷰 시리얼라이저는 유저정보도 담기
 # 책 detail에 리뷰 넣기

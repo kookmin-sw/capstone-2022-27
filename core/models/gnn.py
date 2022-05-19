@@ -3,9 +3,18 @@ from time import time
 import numpy as np
 from tqdm import tqdm
 
+def normalize(lst):
+    res = []
+    lst = list(lst)
+    mean = np.mean(lst)
+    std = np.std(lst)
+    
+    return [(item - mean) / std for item in lst]
+
 class GNN:
     books_to_use = set()
     users_to_use = set()
+    book_baseline = dict()
     all_users = []
     all_books = []
     users = []
@@ -41,7 +50,10 @@ class GNN:
         t1 = time()
         cls.users_to_use = list(pkl.load(open('data/user_1.pkl', 'rb')))
         cls.books_to_use = list(pkl.load(open('data/book_3.pkl', 'rb')))
-        cls.book_baseline = pkl.load(open('data/baseline.pkl', 'rb'))
+        cls.book_baseline = dict(filter(lambda x: x[0] in cls.books_to_use, pkl.load(open('data/baseline.pkl', 'rb')).items()))
+        
+        # normalize book baseline
+        cls.book_baseline = dict(zip(cls.book_baseline.keys(), normalize(cls.book_baseline.values())))
         
         cls.all_users = pkl.load(open('data/gnn_user.pkl', 'rb'))
         cls.all_books = pkl.load(open('data/gnn_book.pkl', 'rb'))
@@ -67,9 +79,13 @@ class GNN:
                 if user_idx == book_idx:
                     continue
                 user_books.append((book_idx, np.dot(user_ebd, book_ebd)))
-            cls.pre_user_to_books[user_idx] = user_books
+            cls.pre_user_to_books[user_idx] = sorted(user_books, key=lambda x: x[1], reverse=True)
             print(f'User {user_idx} computed in {time() - t1} seconds.')
         books = cls.pre_user_to_books[user_idx]
+        
+        # normalize books
+        books = zip([book[0] for book in books], normalize([book[1] for book in books]))
+        
         books = list(map(lambda x: (x[0], x[1] - (cls.book_baseline[x[0]] * alpha)), filter(lambda x: x[0] in cls.book_baseline, books)))
         return sorted(books, key=lambda x: x[1], reverse=True)
 
@@ -85,9 +101,9 @@ class GNN:
                 if book_idx == book2_idx:
                     continue
                 book_books.append((book2_idx, np.dot(book_ebd, book2_ebd)))
-            cls.pre_book_to_books[book_idx] = book_books
+            cls.pre_book_to_books[book_idx] = sorted(book_books, key=lambda x: x[1], reverse=True)
             print(f'Book {book_idx} computed in {time() - t1} seconds.')
-        return sorted(cls.pre_book_to_books[book_idx], key=lambda x: x[1], reverse=True)
+        return cls.pre_book_to_books[book_idx]
     
     @classmethod
     def user_to_users(cls, user_idx):
@@ -101,6 +117,6 @@ class GNN:
                 if user_idx == user2_idx:
                     continue
                 user_users.append((user2_idx, np.dot(user_ebd, user2_ebd)))
-            cls.pre_user_to_users[user_idx] = user_users
+            cls.pre_user_to_users[user_idx] = sorted(user_users)
             print(f'UserToUser {user_idx} computed in {time() - t1} seconds.')
-        return sorted(cls.pre_user_to_users[user_idx], key=lambda x: x[1], reverse=True)
+        return cls.pre_user_to_users[user_idx]
