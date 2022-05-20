@@ -48,8 +48,9 @@ class Keyword(Model):
 
 class Banner(Model):
     book = ForeignKey(Book, on_delete=models.CASCADE, related_name='banners')
-    color1 = CharField(max_length=100)
-    color2 = CharField(max_length=100)
+    color_text = CharField(max_length=100)
+    color_background = CharField(max_length=100)
+    color_point = CharField(max_length=100)
     content = TextField(null=True, default='')
     keywords = TextField(null=True, default='')
     order = IntegerField(default=0)
