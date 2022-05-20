@@ -3,21 +3,25 @@
     import { page } from '$app/stores';
 
     export let books
+    export let nowKeyword = ''
 </script>
 
 <div class='container'>
     {#each books as book}
     <div class="row">
-        <a href="/book/{book.id}"><div class="image" style="background-image: url('{book.image}');"/></a>
-        <div>
-            <div class='title'>{book.title}</div>
-            <div class='author'>{book.author} 지음 {book.publisher} 펴냄</div>
-            <div class="keywords">
-                {#each book['keywords'] as keyword}
-                    <a href='./{keyword}' class='keyword'>#{keyword} </a>
-                {/each}
+        
+        <a href="/book/{book.id}"><div class="image-wrap"><div class="image" style="background-image: url('{book.image}');"></div></div></a>
+        <a href="/book/{book.id}"> 
+            <div class="right">
+                <div class='title'>{book.title}</div>
+                <div class='author'>{book.author} 지음 {book.publisher} 펴냄</div>
+                <div class="keywords">
+                    {#each book['keywords'] as keyword}
+                        <a href='/search/keyword/{keyword}/0' class={'keyword' + (nowKeyword == keyword ? ' selected' : '')}>#{keyword} </a>
+                    {/each}
+                </div>
             </div>
-        </div>
+        </a>
     </div>
     {/each}
 </div>
@@ -29,7 +33,7 @@
         display: flex;
     }
     .container{
-        width: 39.375rem;
+        width: 100%;
     }
     .result{
         margin: 2.563rem 0 1.5rem 0;
@@ -43,15 +47,31 @@
     hr{
         margin-bottom: 1.5rem;
     }
-    .image{
+    .right {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    .image-wrap {
         width: 6rem;
         height: 9rem;
         margin-right: 1.5rem;
+        position: relative;
+        display: inline-block;
+    }
+    .image{
+        position: absolute;
+        display: inline-block;
+        width: 6rem;
+        height: 9rem;
         background-size: contain;
         background-position: center;
         background-repeat: no-repeat;
-        /* background-attachment: fixed; */
-
+        transition: .25s ease-in-out;
+        filter: drop-shadow(0px 3px 4px rgba(27, 29, 31, 0.3));
+    }
+    .image:hover{
+        transform: scale(1.15);
     }
     .title{
         font-family: 'Pretendard';
@@ -92,7 +112,12 @@
         font-size: 12px;
         line-height: 14px;
         text-align: center;
-        margin-right: 0.7rem;
+        margin: 0 0.7rem .7rem 0;
+        transition: .3s ease-in-out;
+    }
+    .keyword:hover, .keyword.selected{
+        color: rgb(45, 189, 205);
+        border-color: rgb(45, 189, 205);
     }
     .row{
         display: flex;

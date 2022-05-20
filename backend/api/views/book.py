@@ -288,7 +288,7 @@ def review(req, book_id, state, content, score, token):
             my_review = None
         if my_review:
             my_review.read_state = state
-            my_review.content = content
+            my_review.content = content if state == '읽었어요' else ''
             my_review.score = score if state == '읽었어요' else 0
             my_review.save()
         else:

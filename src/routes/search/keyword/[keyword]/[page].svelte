@@ -18,7 +18,7 @@
         isloaded=false
         try {
             console.log('page'+$page.params.page+' '+currentPage)
-            books = await bookSearch(keyword, currentPage)
+            books = await bookSearchKeywords(keyword, currentPage)
             console.log(books)
             isloaded=true
             pageCount = Math.floor(books.count/pageNum);
@@ -39,12 +39,12 @@
 <div class='center'>
     <div class="container">
         {#if isloaded}
-        <div class='result'>'{keyword}' 검색 결과</div>
+        <div class='result'>'#{keyword}' 검색 결과</div>
         <hr style="border: 1px solid #26282B;"/>
 
         <div class='container'>
-            <SearchBookList books = {books.books}/>
-            <div class='col button-bar'>
+            <SearchBookList nowKeyword = {keyword} books = {books.books}/>
+            <div class='col'>
                     {#each buttons as button}
                         {#if currentPage + button >= 0 && currentPage + button <= pageCount}
                         
@@ -63,7 +63,6 @@
         {/if}
     </div>
 </div>
-
 
 <style>
     .center{
@@ -97,13 +96,6 @@
         font-size: 1.063rem;
         line-height: 1.25rem;
         color: #1B1D1F;
-    }
-
-    .button-bar {
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
     }
     
     button {

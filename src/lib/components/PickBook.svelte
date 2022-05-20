@@ -29,6 +29,9 @@ import { text } from "svelte/internal";
     background-size: cover;
     width: 10rem;
     height: 15rem;
+
+    border-radius: 0 10px 10px 0;
+    filter: drop-shadow(5px 3px 5px rgba(27, 29, 31, 0.15));
 }
 .star{
     position: absolute;
@@ -41,12 +44,13 @@ import { text } from "svelte/internal";
     text-align: center; */
 }
 .picktext{
+    position: absolute;
+    top: 0;
     font-family: 'Roc Grotesk';
     font-style: normal;
     font-weight: 900;
     font-size: 0.75rem;
     line-height: 2rem;
-    padding: 0 0 .25rem;
 }
 .centered {
   position: absolute;

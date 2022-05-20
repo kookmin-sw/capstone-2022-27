@@ -72,6 +72,14 @@
 
 <slot></slot>
 
+<div class="footer">
+    <div class='booka'>
+        <a href="/"><img class ='booka-img' src="../../static/booka.svg" alt=''/></a>
+    </div>
+    <div class="info">Blueturtle X Flybook</div>
+    <div class="info">Capstone project - Team 27</div>
+</div>
+
 <style>
     .container .col:nth-child(1) { flex-grow: 1; width: 15rem;}
     .container .col:nth-child(2) {
@@ -120,7 +128,7 @@
         vertical-align: middle;
     }
     .logout{
-        margin-left: .3rem;
+        margin-left: 1rem;
         margin-right: .5rem;
         font-size: 2rem;
         font-style: normal;
@@ -134,6 +142,7 @@
     .circle{
         width:1.25rem;
         height:1.25rem;
+        margin: -0.1rem .3rem 0 0;
         border-radius: 50%;
         background-color: #FFB4E6;
     }
@@ -156,10 +165,10 @@
     }
     .search{
         margin-right: 2.5rem;
-        width:19.375rem
+        width:16rem
     }
     .search>img{
-        margin: -0.1rem 0 0.3rem 0 ;
+        margin: 0rem 0.5rem 0rem 0;
     }
     input{
         display: flex;
@@ -195,5 +204,25 @@
 :global(a:visited){
     text-decoration: none;
     color: #26282B;
+}
+
+.footer {
+    margin: 5rem 0 0 0;
+    width: 100%;
+    height: 6rem;
+    padding: 2rem 0;
+    background-color: #dddddd;
+    text-align: center;
+    font-family: 'Pretendard';
+    font-weight: bold;
+    font-size: .8rem;
+    color: #666;
+}
+.footer .info{
+    margin: .5rem 0;
+}
+.footer .booka-img {
+    width: 5.9rem;
+    height: 1.31rem;
 }
 </style>

@@ -2,10 +2,15 @@
     import { goto } from '$app/navigation';
 
     import Banner from '$lib/components/Banner.svelte'
+    import Loading from '$lib/components/Loading.svelte';
     import RecomList from '$lib/components/RecomList.svelte'
-    import { getBanners, mainBannerMockup } from '../lib/api'
+    import { getBanners, mainBannerMockup, mainpage } from '../lib/api'
     import { stores_first } from '../lib/stores.js'
+    import { onMount } from 'svelte'
     let recom_types = [0,1,2,3,4]
+
+    let recoms = []
+    let loaded = false
 
     let isfirst
     stores_first.subscribe(value => {
@@ -19,6 +24,14 @@
     }
     
     const initBanner=  mainBannerMockup()
+
+    onMount(async () => {
+        let futures = recom_types.map(type => mainpage(type))
+        Promise.all(futures).then(values => {
+            recoms = values
+            loaded = true
+        })
+    })
 </script>
 
 <div class="content">    
@@ -28,16 +41,19 @@
         <Banner banners={banner} />
     {/await}
     
+    {#if !loaded}
+    <Loading></Loading>
+    {:else}
     <div class='container'>
         <div class='col'></div>
         <div class='col'>
             <div class=''>
                 <div class='recomlists'>
                     <p class='foryou'>당신을 위한 추천</p>
-                    <hr style="borderr:solid 1px #26282B">
+                    <hr style="border: solid 1px #66686B">
                     
-                    {#each recom_types as recom_type}
-                        <div class='recomlist'><RecomList recom_type={recom_type}/></div>
+                    {#each recoms as recom}
+                        <div class='recomlist'><RecomList recom={recom}/></div>
                     {/each}
                     
                 </div>
@@ -45,6 +61,7 @@
         </div>
         <div class='col'></div>
     </div>
+    {/if}
 </div>
 
 <style>
@@ -88,6 +105,7 @@
         margin-left: 1.5rem;
     }
     .recomlist{
-        /* margin-bottom: 3rem; */
+        margin-top: 1rem;
+        margin-bottom: 2rem;
     }
 </style>

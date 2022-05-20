@@ -8,21 +8,40 @@
     import Rating from '$lib/components/Rating.svelte'
     import BookStatusBtn from '$lib/components/BookStatusBtn.svelte';
     import BookList from '$lib/components/BookList.svelte';
+    import Loading from '$lib/components/Loading.svelte';
+    import {onMount} from 'svelte';
+import { mount_component } from 'svelte/internal';
 
     let id = $page.params.id
     let loaded=false;
-    let book, reviews
-    bookDetail(id).then(res=> {
-        loaded=true
-        book = res
-        reviews = book.reviews
-    }).catch(err=>{})
+    let book, reviews, num_review
+    let reviewpage = 0
 
+    async function mount () {
+        loaded = false
+        bookDetail(id).then(res=> {
+            book = res
+            reviews = book.reviews
+            num_review = book.book.num_review
+            console.log(num_review)
+            reviewContent=''
+            reviewpage = 0
+            rating = 0
+            randkey = Math.random()
+            ratings = [10 , 9 , 8 , 7 , 6 , 5 , 4 , 3 , 2 , 1]
+            loaded = true
+        }).catch(err=>{})
+    }
+    
     function loadReviews(page){
         getReviewPage(id, page).then(res =>{
-            console.log(reviews)
             reviews = res
-            console.log(reviews)
+        })
+    }
+    function loadMoreReviews(){
+        reviewpage++
+        getReviewPage(id, reviewpage).then(res =>{
+            reviews = reviews.concat(res)
         })
     }
     
@@ -39,11 +58,19 @@
         reviewContent=''
     }
 
+    $: {
+        if (loaded && id != $page.params.id) {
+            id = $page.params.id
+            mount()
+        }
+    }
+    onMount(mount)
+
 </script>
 
 <div class="book-detail">
     {#if !loaded}
-        <p>loading...</p>
+        <Loading></Loading>
     {:else}
         <div class="book-container">
             <div class='col margin'>
@@ -74,7 +101,7 @@
             <div class='index'><BookIntro  title="목차" content="{book['book']['desc_index']}"/></div>
             <div class='index'><BookIntro  title="출판사 책 소개" content="{book['book']['desc_pub']}"/></div>
 
-            <div class='title index'> 리뷰 </div>
+            <div class='title index'> 리뷰 <div class="num_review"> {num_review} </div> </div> 
             <hr class='border'>
             <div>
                 {#each reviews as review}
@@ -83,8 +110,11 @@
                     review='{review.content}' bind:rating='{review.score}' />
                 </div>
                 {/each}
+                
+                {#if num_review > reviews.length}
+                    <div class='load-more' on:click={loadMoreReviews}>{Math.min(3, num_review - reviews.length)}개의 리뷰 더 보기<img src="../static/bottom_arrow.svg" on:click="{e=> opened = !opened}" alt=''/></div>
+                {/if}
             </div>
-
             <div>
                 <div class='col'>
                     <div class="circle"></div>
@@ -104,10 +134,9 @@
                 </div>
                 <div class='right'>
                     <div id='review-word-count'>{reviewContent.length}/10000</div>
-                    <div id='review-btn' on:click='{writeReviewClicked}'><p>리뷰 등록</p></div>
+                    <div id='review-btn' class={reviewContent.length && rating!=0?'filled':''} on:click='{() => {if (reviewContent.length && rating!=0) {writeReviewClicked()}}}'><p>리뷰 등록</p></div>
                 </div>
-                </div>
-            
+            </div>
             <div class='similar'>
                 <div class='title'>비슷한 책</div>
                 <hr class='border'>
@@ -120,6 +149,36 @@
 </div>
 
 <style>
+    .num_review {
+        margin-left: .3rem;
+        font-family: 'Pretendard';
+        font-style: normal;
+        font-weight: 700;
+        font-size: 15px;
+        line-height: 18px;
+        /* identical to box height */
+        color: #37DBFF;
+        display: inline-block;
+    }
+    .load-more {
+        margin: 2rem 1rem 3rem;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        padding: 12px;
+        gap: 8px;
+
+        background: #FFFFFF;
+        border: 0.5px solid #26282B;
+        border-radius: 2px;
+        cursor: pointer;
+        transition: .2s ease-in-out;
+    }
+    .load-more:hover {
+        background: #EEE;
+    }
     #review-wrapper{
         margin-bottom: 1.375rem;
     }
@@ -221,6 +280,13 @@
         line-height: 14px;
         text-align: center;
         margin-right: 0.7rem;
+        color: #26282B;
+        border-color: #26282B;
+        transition: .3s ease-in-out;
+    }
+    .keyword:hover{
+        color: rgb(45, 189, 205);
+        border-color: rgb(45, 189, 205);
     }
     .summary{
         font-family: 'Pretendard';
@@ -317,8 +383,12 @@
 
     color: #E9EBED;
 }
+#review-btn.filled {
+    background-color: rgb(55, 219, 255);
+    color: #ffffff;
+}
 .circle {
-    margin: 0;
+    margin: 0 .2rem 0 0;
     /* width:36px;
     height:36px; */
     width: 2.25rem;

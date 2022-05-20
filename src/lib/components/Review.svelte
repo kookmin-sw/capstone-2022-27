@@ -6,7 +6,7 @@
     export let review
 </script>
 
-<div>
+<div class="wrapper">
     <div class='col'>
         <div class="circle"></div>
         <div id='profile-wrapper'>
@@ -22,6 +22,9 @@
 </div>
 
 <style>
+.wrapper {
+    margin: 2rem 0 1rem 0;
+}
 #username{
     font-family: 'Pretendard';
     font-style: normal;
@@ -67,7 +70,7 @@
 }
 
 .circle {
-    margin: 0;
+    margin: 0 .2rem 0 0;
     /* width:36px;
     height:36px; */
     width: 2.25rem;

@@ -3,7 +3,7 @@ export let backgroundColor="#1B1D1F"
 export let textColor="#24E772"
 </script>
 
-<div>
+<div class="abs">
     <div class='booka-pick center' style="background-color:{backgroundColor}; color:{textColor}">booka Pick</div>
 </div>
 
@@ -18,6 +18,12 @@ export let textColor="#24E772"
     font-style: normal;
     font-weight: 900;
     font-size: 1rem;
+}
+
+.abs{
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
 .center{
