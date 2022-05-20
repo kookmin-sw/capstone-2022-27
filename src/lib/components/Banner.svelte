@@ -10,22 +10,22 @@ let flicking= Flicking;
 </script>
 
 <div class="container">
-    <Flicking bind:this={flicking} options={{ align: "center", circular: true, defaultIndex:0 }}>
+    <Flicking bind:this={flicking} options={{ align: "center", circular: true, defaultIndex:1 }}>
         {#each banners as banner}
         <FlickingPanel>
             <div class='col' style="background-color:{banner.bgColor}">
                 <div style="width:50%;" >
-                    <BookaPickBox/>
+                    <BookaPickBox backgroundColor={banner.pointColor} textColor={banner.textColor}/>
                     <div class='desc'>
-                        <div class="desctext">{@html banner.desc}</div>
-                        <!-- {#each banners.keywords as keyword}
-                            <a clㄴass='keyword' href={`./book/${keyword}`}>#{keyword} </a>
-                        {/each} -->
+                        <div class="desctext" style="color:{banner.textColor}">{@html banner.desc}</div>
+                        {#each banner.keywords as keyword}
+                            <a class='keyword' style='color:{banner.pointColor}'href={`./book/${keyword}`}>#{keyword} </a>
+                        {/each}
                     </div>
                 </div>
                 <div style="width:50%; position:relative">
                     <div class='centered'>
-                        <PickBook img={banner.image} starColor='#23E771'></PickBook>
+                        <PickBook img={banner.image} starColor={banner.pointColor} textColor={banner.textColor}></PickBook>
                     </div>
                 </div>
             </div>
@@ -36,10 +36,10 @@ let flicking= Flicking;
         </FlickingPanel>
         {/each}
     </Flicking>
-    <div>
+    <!-- <div>
         <img class='btn-img' src="/static/prev-black.svg"/>
         <img class='btn-img' src="/static/next-black.svg"/>
-    </div>
+    </div> -->
 </div>
     
 <style>
@@ -56,7 +56,7 @@ let flicking= Flicking;
 
     .col{
         display: flex;
-        width:60rem;
+        width:50rem;
         /* width: calc(18rem + 33%); */
         height: 22.5rem;
         /* justify-content: center; */
