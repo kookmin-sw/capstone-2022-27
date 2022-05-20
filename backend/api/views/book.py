@@ -252,7 +252,7 @@ def recommend(req, recom_type, token):
             # random.shuffle(books)
             line = BookLineSerializer({
                 'title': f'#{keyword}',
-                'books': read_filter(BookSimpleSerializer(Book.objects.filter(keywords=keyword).order_by('-num_review')[:30], many=True).data)
+                'books': read_filter(BookSimpleSerializer(Book.objects.filter(keywords__keyword=keyword).order_by('-num_review')[:30], many=True).data)
             }).data
             return res(line)
         return res(code=4, msg='알 수 없는 추천 종류')
