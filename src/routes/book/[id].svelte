@@ -54,7 +54,7 @@
                     <div class="author"><b>{book['book']['author']}</b> 지음 | <b>{book['book']['publisher']}</b> 펴냄 </div>
                     <div class="keywords">
                         {#each book['book']['keywords'] as keyword}
-                            <a href='/search/keyword/{keyword}' class='keyword'>#{keyword} </a>
+                            <a href='/search/keyword/{keyword}/0' class='keyword'>#{keyword} </a>
                         {/each}
                     </div>
                     <div class='col button_container'>

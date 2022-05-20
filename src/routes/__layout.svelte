@@ -17,14 +17,15 @@
 
     function gotoSearch(){
         if(searchWord.charAt(0) == '#'){
-            goto('/search/keyword/'+searchWord.substring(1))
+            goto('/search/keyword/'+searchWord.substring(1)+'/0',)
         } else{
-            goto('/search/'+searchWord)
+            goto('/search/'+searchWord+'/0', {replaceState: true})
         }
 
     }
 
     function logout(){
+        console.log("logout")
         _nickname='', token=''
         stores_TOKEN.update(x => '')
         stores_nickname.update(x => '')
@@ -33,7 +34,7 @@
     }
 
     const onKeyPress = e => {
-    if (e.charCode === 13) gotoSearch() // 13 : enterKey
+        if (e.charCode === 13) gotoSearch() // 13 : enterKey
     };
     
 </script>

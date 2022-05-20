@@ -3,7 +3,7 @@
 
     import Banner from '$lib/components/Banner.svelte'
     import RecomList from '$lib/components/RecomList.svelte'
-    import { mainBannerMockup, recomsMockup, mainpage } from '../lib/api'
+    import { getBanners, mainBannerMockup } from '../lib/api'
     import { stores_first } from '../lib/stores.js'
     let recom_types = [0,1,2,3,4]
 
@@ -25,10 +25,8 @@
     {#await initBanner}
         <p>loading..</p>
     {:then banner}
-        <Banner img={banner.image} desc={banner.desc} 
-        keywords={banner.keyword} bgColor = {banner.bgColor} />
+        <Banner banners={banner} />
     {/await}
-    
     
     <div class='container'>
         <div class='col'></div>

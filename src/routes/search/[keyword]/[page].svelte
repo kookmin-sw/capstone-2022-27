@@ -2,11 +2,43 @@
     import { bookSearch, bookSearchKeywords, booksMockup} from '$lib/api'
     import { page } from '$app/stores';
     import SearchBookList from '$lib/components/SearchBookList.svelte';
-    let keyword = $page.params.keyword
-    let pageNum = 0 
+    import { goto } from '$app/navigation';
 
-    const bookSearchP = bookSearch(keyword,pageNum)
+    export let buttons = [-2, -1, 0, 1, 2];
+    let keyword = $page.params.keyword
+    const pageNum = 10
     
+    let currentPage = Number($page.params.page)
+    let isloaded=false
+    let books
+    let pageCount;
+    
+    async function getBookSearch(){
+        isloaded=false
+        try {
+            console.log('page'+$page.params.page+' '+currentPage)
+            books = await bookSearch(keyword, currentPage)
+            console.log(books)
+            isloaded=true
+            pageCount = Math.floor( pageNum / books.count);
+        } catch (e) {console.error(e)}
+        
+    }
+    
+    getBookSearch()
+
+    $: {
+        if (keyword != $page.params.keyword) {
+            keyword = $page.params.keyword
+            currentPage = Number($page.params.page)
+            isloaded = false
+            bookSearch(keyword, currentPage).then((data) => {
+                books = data
+                isloaded = true
+                pageCount = Math.floor( pageNum / books.count);
+            })
+        }
+    }
 </script>
 
 <div class='center'>
@@ -15,11 +47,23 @@
     <hr style="border: 1px solid #26282B;"/>
 
     <div class='container'>
-        {#await bookSearchP}
-            loading...
-        {:then books} 
+        {#if isloaded}
            <SearchBookList books = {books.books}/>
-        {/await}
+           <div style='col'>
+                {#each buttons as button}
+                    {#if currentPage + button >= 0 && currentPage + button <= pageCount}
+                    <li>
+                        <button
+                            class:active={currentPage === currentPage + button}
+                            on:click={e => goto(`/search/${keyword}/${currentPage + button}`)}>
+                            {currentPage + button + 1}
+                        </button>
+                    </li>
+                    {/if}
+                {/each}
+            </div>
+        {/if}
+
     </div>
 </div>
 
