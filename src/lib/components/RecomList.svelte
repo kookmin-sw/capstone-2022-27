@@ -6,7 +6,7 @@
     import Flicking, { FlickingPanel } from "@egjs/svelte-flicking";
     import "@egjs/svelte-flicking/dist/flicking.css";
 
-    let flicking= Flicking;
+    let flicking = Flicking;
     const init = mainpage(recom_type)
     
 </script>
@@ -57,7 +57,6 @@
 
     .row { 
         position: relative;
-        overflow: scroll;
         display: flex;
         align-items: center;
         flex-wrap: nowrap;
