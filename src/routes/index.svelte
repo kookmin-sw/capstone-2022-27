@@ -1,10 +1,11 @@
 <script>
-import { goto } from '$app/navigation';
+    import { goto } from '$app/navigation';
 
     import Banner from '$lib/components/Banner.svelte'
     import RecomList from '$lib/components/RecomList.svelte'
-    import { mainBannerMockup, recomsMockup, mainpage } from '../lib/api'
+    import { getBanners, mainBannerMockup } from '../lib/api'
     import { stores_first } from '../lib/stores.js'
+    let recom_types = [0,1,2,3,4]
 
     let isfirst
     stores_first.subscribe(value => {
@@ -13,11 +14,10 @@ import { goto } from '$app/navigation';
     
     console.log(isfirst)
     if(isfirst=='true'){
+        console.log(isfirst)
         goto('/first')
     }
-
     
-    const init = mainpage()
     const initBanner=  mainBannerMockup()
 </script>
 
@@ -25,10 +25,8 @@ import { goto } from '$app/navigation';
     {#await initBanner}
         <p>loading..</p>
     {:then banner}
-        <Banner img={banner.image} desc={banner.desc} 
-        keywords={banner.keyword} bgColor = {banner.bgColor} />
+        <Banner banners={banner} />
     {/await}
-    
     
     <div class='container'>
         <div class='col'></div>
@@ -37,15 +35,11 @@ import { goto } from '$app/navigation';
                 <div class='recomlists'>
                     <p class='foryou'>당신을 위한 추천</p>
                     <hr style="borderr:solid 1px #26282B">
-                    {#await init}
-                        <p>waiting..</p>
-                    {:then recoms}
-                        {#each recoms.lines as recom}
-                            <div class='recomlist'><RecomList recom={recom}/></div>
-                        {/each}
-                    {:catch error}
-                        <p>error: {error.message}</p>
-                    {/await}
+                    
+                    {#each recom_types as recom_type}
+                        <div class='recomlist'><RecomList recom_type={recom_type}/></div>
+                    {/each}
+                    
                 </div>
             </div>
         </div>

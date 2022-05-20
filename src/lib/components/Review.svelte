@@ -13,7 +13,6 @@
             <div id='username'>{username}</div>
             <div class="col">
                 <div id='date'>{date}</div>
-                <div id=''>{rating}</div>
                 <Rating rating={rating}/>
             </div>
             
@@ -38,6 +37,7 @@
     font-size: 12px;
     line-height: 1rem;
     color: #9EA4AA;
+    padding-right: 0.5rem;
 }
 #content{
     font-family: 'Pretendard';

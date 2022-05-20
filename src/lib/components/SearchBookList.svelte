@@ -44,8 +44,8 @@
         margin-bottom: 1.5rem;
     }
     .image{
-        width: 8.25rem;
-        height: 11.875rem;
+        width: 6rem;
+        height: 9rem;
         margin-right: 1.5rem;
         background-size: contain;
         background-position: center;
@@ -60,6 +60,7 @@
         font-size: 1.063rem;
         line-height: 1.25rem;
         color: #1B1D1F;
+        margin-top: 1.5rem;
     }
 
     .author{

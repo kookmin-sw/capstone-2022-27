@@ -16,7 +16,7 @@ export let textColor="#24E772"
     text-align: center;
     font-family: 'Museo Slab';
     font-style: normal;
-    font-weight: 400;
+    font-weight: 900;
     font-size: 1rem;
 }
 

@@ -19,6 +19,7 @@ djangorestframework-jwt = "*"
 flask = "*"
 numpy = "*"
 tqdm = "*"
+pyjwt = "*"
 
 [dev-packages]
 

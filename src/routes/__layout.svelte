@@ -2,7 +2,7 @@
     import { profileMockup } from '../lib/api'
     import '../../static/fonts/pretendard-subset.css'
     import { goto } from '$app/navigation';
-    import { stores_TOKEN, stores_nickname } from '$lib/stores';
+    import { stores_TOKEN, stores_nickname, stores_first } from '$lib/stores';
 
     let _nickname, token=''
     stores_TOKEN.subscribe(value => {
@@ -17,22 +17,24 @@
 
     function gotoSearch(){
         if(searchWord.charAt(0) == '#'){
-            goto('/search/keyword/'+searchWord.substring(1))
+            goto('/search/keyword/'+searchWord.substring(1)+'/0',)
         } else{
-            goto('/search/'+searchWord)
+            goto('/search/'+searchWord+'/0', {replaceState: true})
         }
 
     }
 
     function logout(){
+        console.log("logout")
         _nickname='', token=''
         stores_TOKEN.update(x => '')
         stores_nickname.update(x => '')
+        stores_first.update(x => 'false')
         goto('login')
     }
 
     const onKeyPress = e => {
-    if (e.charCode === 13) gotoSearch() // 13 : enterKey
+        if (e.charCode === 13) gotoSearch() // 13 : enterKey
     };
     
 </script>
@@ -184,5 +186,14 @@
 
 :global(a){
     text-decoration: none;
+    color: #26282B;
+}
+:global(a:link){
+    text-decoration: none;
+    color: #26282B;
+}
+:global(a:visited){
+    text-decoration: none;
+    color: #26282B;
 }
 </style>

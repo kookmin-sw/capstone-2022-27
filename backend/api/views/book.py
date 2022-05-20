@@ -45,7 +45,7 @@ def detail(req, id:int, token):
     try:
         my_review = Review.objects.filter(book=book, user=user).order_by('-created_at')[0]
         my_review = ReviewSerializer({
-                'user_name': my_review.user.nickname,
+                'user_name': review.user.nickname if review.user.booka else gen(review.user.id),
                 'read_state': my_review.read_state,
                 'score': my_review.score,
                 'created_at': my_review.created_at,
@@ -54,7 +54,6 @@ def detail(req, id:int, token):
     except Exception as e:
         print(e)
         my_review = None
-    
     data = {
         'book': BookSerializer(book).data,
         'similar': BookSimpleSerializer(similar_books, many=True).data,

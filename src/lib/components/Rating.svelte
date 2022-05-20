@@ -1,7 +1,7 @@
 <script>
 import { createEventDispatcher } from 'svelte';
 const dispatch = createEventDispatcher()
-export let enabled = true
+export let enabled = false
 export let rating = 7
 let randkey = Math.random()
 
@@ -42,7 +42,8 @@ const onchange = () => {
 /* The star of the show */
 .rate > label:before {
     display: inline-block;
-    padding: .3rem .1rem;
+    /* padding: .3rem .1rem; */
+    padding-right:0.1rem ;
     margin: 0;
     cursor: pointer;
     font-family: FontAwesome;
@@ -55,7 +56,7 @@ const onchange = () => {
 .rate .half:before {
     content: "\f089 "; /* half star no outline */
     position: absolute;
-    padding-right: 0;
+    /* padding-right: 0; */
 
     font-size: 16px;
 }
@@ -71,4 +72,8 @@ label.enabled:hover, label.enabled:hover ~ label { color: #07ABCF;  } /* color p
 input:checked + label.enabled:hover, input:checked ~ label:hover, /* highlight current and previous stars */
 input:checked ~ label.enabled:hover ~ label, /* highlight previous selected stars for new rating */
 label.enabled:hover ~ input:checked ~ label /* highlight previous selected stars */ { color: #37DBFF;  } 
+
+fieldset {
+    padding: 0;
+}
 </style>

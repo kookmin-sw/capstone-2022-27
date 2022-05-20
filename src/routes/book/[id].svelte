@@ -1,26 +1,50 @@
 <script>
-    import { bookDetail ,profileMockup} from '$lib/api'
+    import { bookDetail ,writeReview, getReviewPage} from '$lib/api'
     import { page } from '$app/stores';
     import BookIntro from '$lib/components/BookIntro.svelte';
     import RecomList from '$lib/components/RecomList.svelte';
     import BookSmall from '$lib/components/BookSmall.svelte';
     import Review from '$lib/components/Review.svelte';
     import Rating from '$lib/components/Rating.svelte'
-import BookStatusBtn from '$lib/components/BookStatusBtn.svelte';
+    import BookStatusBtn from '$lib/components/BookStatusBtn.svelte';
+    import BookList from '$lib/components/BookList.svelte';
 
     let id = $page.params.id
-    const bookP = bookDetail(id)
+    let loaded=false;
+    let book, reviews
+    bookDetail(id).then(res=> {
+        loaded=true
+        book = res
+        reviews = book.reviews
+    }).catch(err=>{})
 
-    function handleMessage(event) {
-		alert(event.detail.text);
-	}
+    function loadReviews(page){
+        getReviewPage(id, page).then(res =>{
+            console.log(reviews)
+            reviews = res
+            console.log(reviews)
+        })
+    }
+    
+    let reviewContent=''
+
+    $: reviews
+    let rating = 0; let randkey = Math.random()
+
+    let ratings = [10 , 9 , 8 , 7 , 6 , 5 , 4 , 3 , 2 , 1]
+    
+    async function writeReviewClicked(){
+        let res = await writeReview(id, '읽었어요', rating,reviewContent)
+        loadReviews(0)
+        reviewContent=''
+    }
 
 </script>
 
 <div class="book-detail">
-    {#await bookP}
+    {#if !loaded}
         <p>loading...</p>
-    {:then book}
+    {:else}
         <div class="book-container">
             <div class='col margin'>
                 <div class="image" style="background-image: url('{book['book']['image']}');"></div>
@@ -30,7 +54,7 @@ import BookStatusBtn from '$lib/components/BookStatusBtn.svelte';
                     <div class="author"><b>{book['book']['author']}</b> 지음 | <b>{book['book']['publisher']}</b> 펴냄 </div>
                     <div class="keywords">
                         {#each book['book']['keywords'] as keyword}
-                            <a href=' ' class='keyword'>#{keyword} </a>
+                            <a href='/search/keyword/{keyword}/0' class='keyword'>#{keyword} </a>
                         {/each}
                     </div>
                     <div class='col button_container'>
@@ -53,11 +77,10 @@ import BookStatusBtn from '$lib/components/BookStatusBtn.svelte';
             <div class='title index'> 리뷰 </div>
             <hr class='border'>
             <div>
-                {#each book.reviews as review}
+                {#each reviews as review}
                 <div id='review-wrapper'>
-                    {review.score}
                     <Review username='{review.user_name}' date='{new Date(review.created_at).toLocaleDateString()}' 
-                    review='{review.content}' bind:rating='{review.score}' on:message={handleMessage} />
+                    review='{review.content}' bind:rating='{review.score}' />
                 </div>
                 {/each}
             </div>
@@ -68,14 +91,20 @@ import BookStatusBtn from '$lib/components/BookStatusBtn.svelte';
                     <div id='profile-wrapper'>
                         <div class="col">
                             <div id='my-rating-title'>나의 별점</div>
-                            <Rating rating=0 enabled=true/>                            
+                            <fieldset class="rate">
+                                {#each ratings as r}
+                                    <input type="radio" id="rand{randkey}{r}" disabled={false} bind:group={rating} name="rand{randkey}" value="{r}" />
+                                    <label for="rand{randkey}{r}" class="{r%2==1?'half':''} 'enabled'"></label>
+                                {/each}
+                            </fieldset>
                         </div>
-                        <input id='write-review' placeholder="리뷰를 남겨주세요"/>
+                        <textarea id='write-review' placeholder="리뷰를 남겨주세요"
+                        bind:value={reviewContent}/>
                     </div>
                 </div>
-                <div>
-                    <div id='review-word-count'>/1000</div>
-                    <div id='review-btn'>리뷰 등록</div>
+                <div class='right'>
+                    <div id='review-word-count'>{reviewContent.length}/10000</div>
+                    <div id='review-btn' on:click='{writeReviewClicked}'><p>리뷰 등록</p></div>
                 </div>
                 </div>
             
@@ -83,15 +112,11 @@ import BookStatusBtn from '$lib/components/BookStatusBtn.svelte';
                 <div class='title'>비슷한 책</div>
                 <hr class='border'>
                 <div class='row'>
-                {#each book['similar'] as book}
-                    <a class='book' href={`./${book.id}`}><BookSmall image={book.image} title={book.title} author={book.author}/></a>
-                {/each}
+                <BookList books={book['similar']}/>
                 </div>
             </div>
         </div>
-    {:catch error}
-        <p>error: {error.message}</p>
-    {/await}
+    {/if}
 </div>
 
 <style>
@@ -142,6 +167,11 @@ import BookStatusBtn from '$lib/components/BookStatusBtn.svelte';
         color: #444;
         font-weight: bold;
         margin: 2rem;
+    }
+    #profile-wrapper{
+        /* display: flex; */
+        padding-left: 0.5rem;
+        width:100%;
     }
 
     .book-detail {
@@ -239,13 +269,24 @@ import BookStatusBtn from '$lib/components/BookStatusBtn.svelte';
     font-size: 0.75rem;
     line-height: 0.875rem;
     color: #9EA4AA;
+    padding-right: 0.75rem;
+}
+#profile-wrapper {
+    text-align: center;
 }
 #write-review{
+    resize: none;
     background: #F7F8F9;
     border-radius: 2px;
     border: 0ch;
-    flex-grow: 1;
     padding: 0.5rem;
+    margin: 0 auto;
+    width: calc(100% - 1rem);
+    height: 4.25rem;
+    vertical-align: text-top;
+}
+#write-review:focus{
+    outline: none;
 }
 #review-word-count{
     font-family: 'Pretendard';
@@ -255,6 +296,7 @@ import BookStatusBtn from '$lib/components/BookStatusBtn.svelte';
     line-height: 0.875rem;
     text-align: right;
     color: #9EA4AA;
+    padding-right: 0.75rem;
 }
 #review-btn{
     width: 4.5rem;
@@ -271,6 +313,7 @@ import BookStatusBtn from '$lib/components/BookStatusBtn.svelte';
     display: flex;
     align-items: center;
     text-align: center;
+    justify-content: center;
 
     color: #E9EBED;
 }
@@ -285,6 +328,69 @@ import BookStatusBtn from '$lib/components/BookStatusBtn.svelte';
     display: flex;
     flex-shrink: 0;
 }
+.right{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-top: 0.75rem;
+}
+
+
+
+/* Base setup */
+@import url(//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);
+
+/* Ratings widget */
+.rate {
+    display: inline-block;
+    border: 0;
+}
+/* Hide radio */
+.rate > input {
+    display: none;
+}
+/* Order correctly by floating highest to the right */
+.rate > label {
+    float: right;
+}
+/* The star of the show */
+.rate > label:before {
+    display: inline-block;
+    /* padding: .3rem .1rem; */
+    padding-right:0.1rem ;
+    margin: 0;
+    cursor: pointer;
+    font-family: FontAwesome;
+    content: "\f005 "; /* full star */
+    
+    font-size: 16px;
+}
+
+/* Half star trick */
+.rate .half:before {
+    content: "\f089 "; /* half star no outline */
+    position: absolute;
+    /* padding-right: 0; */
+
+    font-size: 16px;
+}
+
+label {
+    color: #E9EBED;
+}
+/* Click + hover color */
+input:checked ~ label, /* color current and previous stars on checked */
+label.enabled:hover, label.enabled:hover ~ label { color: #07ABCF;  } /* color previous stars on hover */
+
+/* Hover highlights */
+input:checked + label.enabled:hover, input:checked ~ label:hover, /* highlight current and previous stars */
+input:checked ~ label.enabled:hover ~ label, /* highlight previous selected stars for new rating */
+label.enabled:hover ~ input:checked ~ label /* highlight previous selected stars */ { color: #37DBFF;  } 
+
+fieldset {
+    padding: 0;
+}
+
 
     
 </style>
