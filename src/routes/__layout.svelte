@@ -3,13 +3,20 @@
     import '../../static/fonts/pretendard-subset.css'
     import { goto } from '$app/navigation';
     import { stores_TOKEN, stores_nickname, stores_first } from '$lib/stores';
+import { onMount } from 'svelte';
 
     let _nickname, token=''
     stores_TOKEN.subscribe(value => {
-        token = value;
+        if (value) {
+            token = value
+        } else {
+            token = ''
+        }
     });
     stores_nickname.subscribe(value => {
-        _nickname = value;
+        if (value) {
+            _nickname = value
+        }
     });
 
     let profileInit = profileMockup()
@@ -30,12 +37,21 @@
         stores_TOKEN.update(x => '')
         stores_nickname.update(x => '')
         stores_first.update(x => 'false')
+        localStorage.setItem('token', '')
+        localStorage.setItem('nickname', '')
+        localStorage.setItem('isfirst', '')
         goto('login')
     }
 
     const onKeyPress = e => {
         if (e.charCode === 13) gotoSearch() // 13 : enterKey
     };
+
+    onMount(async () => {
+        if (token == '' || !token) {
+            logout()
+        }
+    });
     
 </script>
 <svelte:head>
@@ -46,15 +62,15 @@
     <div class='col'></div>
     <div class='col space-between' >
         <div class='booka'>
-            <a href="/"><img class ='booka-img' src="../../static/booka.svg" alt=''/></a>
+            <a href="/"><img class ='booka-img' src="/booka.svg" alt=''/></a>
         </div>
         <div class='right'>
             <div class='search vertical-center-parent'> 
-                <img src="../../static/search.svg" alt=''/>
+                <img src="/search.svg" alt=''/>
                 <input type="text" name="" on:keypress={onKeyPress} bind:value="{searchWord}"
                 placeholder="책 제목 또는 '#키워드'로 검색하세요"  class="custom-input">
             </div>
-            {#if token != ''}
+            {#if token!='null' && token != '' && token}
                 <div class='profile vertical-center'>
                     {#await profileInit};
                     {:then profile} 
@@ -77,13 +93,16 @@
 
 <div class="footer">
     <div class='booka'>
-        <a href="/"><img class ='booka-img' src="../../static/booka.svg" alt=''/></a>
+        <a href="/"><img class ='booka-img' src="/booka.svg" alt=''/></a>
     </div>
     <div class="info">Blueturtle X Flybook</div>
     <div class="info">Capstone project - Team 27</div>
 </div>
 
 <style>
+    :global(body) {
+        font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+    }
     .container .col:nth-child(1) { flex-grow: 1; width: 15rem;}
     .container .col:nth-child(2) {
          flex-grow: 1;

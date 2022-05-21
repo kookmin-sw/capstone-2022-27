@@ -17,7 +17,7 @@ if __name__ == "__main__":
 
 @app.before_request
 def whitelist():
-    if request.remote_addr not in ['127.0.0.1']:
+    if request.remote_addr not in ['127.0.0.1', 'localhost']:
         abort(403)
 
 @app.route('/gnn/usertobooks/<int:user_idx>')
@@ -49,4 +49,5 @@ def cossim_make_as_a(user_idx):
 def is_inner_user(user_idx):
     return str(CosineSimilarity.is_inner_user(user_idx))
 
-app.run(host='127.0.0.1', port=3009, debug=True)
+if __name__ == "__main__":
+    app.run(host='127.0.0.1', port=3009, debug=True)

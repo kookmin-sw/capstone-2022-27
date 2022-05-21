@@ -13,7 +13,7 @@
 <div class="content">
     <div class='reason'>{recom.title}</div>
     <div class='btn prev' on:click={() => { flicking.moveTo(flicking.index-6); }} >
-        <img class='btn-img' src="/static/prev.svg"/>
+        <img class='btn-img' src="/prev.svg"/>
     </div>
     <div class='row'>
         <Flicking bind:this={flicking} options={{ align: "prev", circular: false, defaultIndex:0 }}>
@@ -27,7 +27,7 @@
         </Flicking>
     </div>
     <div class='btn next'  on:click={() => { flicking.moveTo(flicking.index+6); }} >
-        <img class='btn-img' src="/static/next.svg"/>
+        <img class='btn-img' src="/next.svg"/>
     </div>
 </div>
 

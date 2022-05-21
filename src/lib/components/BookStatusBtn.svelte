@@ -29,24 +29,24 @@
     <div class='status-container col'>
         {#if status=='읽고싶어요'}
             <div class='btn btn-selected' on:click='{e=> { status=''; reviewBtnClicked()}}'>
-                <img alt='' src='/static/hope_selected.svg' >
+                <img alt='' src='/hope_selected.svg' >
                 <div style='color:{btnColors[0]}'>읽고싶어요</div>
             </div>
         {:else}
             <div class='btn' on:click={e=> {status='읽고싶어요'; reviewBtnClicked()}}>
-                <img alt='' src='../static/hope.svg' >
+                <img alt='' src='/hope.svg' >
                 <div>읽고싶어요</div>
             </div>
         {/if}
 
         {#if status=='읽었어요'}
             <div class='btn btn-selected' on:click={e=> {status=''; reviewBtnClicked()}}>
-                <img alt='' src='/static/read_selected.svg' >
+                <img alt='' src='/read_selected.svg' >
                 <div style='color:{btnColors[1]}'>읽었어요</div>
             </div>
         {:else}
             <div class='btn' on:click={e=> {status='읽었어요'; reviewBtnClicked()}}>
-                <img alt='' src='../static/read.svg' >
+                <img alt='' src='/read.svg' >
                 <div>읽었어요</div>
             </div>
         {/if}

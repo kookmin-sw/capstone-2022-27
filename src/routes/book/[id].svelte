@@ -115,7 +115,7 @@
                 {/each}
                 
                 {#if num_review > reviews.length}
-                    <div class='load-more' on:click={loadMoreReviews}>{Math.min(3, num_review - reviews.length)}개의 리뷰 더 보기<img src="../static/bottom_arrow.svg" on:click="{e=> opened = !opened}" alt=''/></div>
+                    <div class='load-more' on:click={loadMoreReviews}>{Math.min(3, num_review - reviews.length)}개의 리뷰 더 보기<img src="/bottom_arrow.svg" on:click="{e=> opened = !opened}" alt=''/></div>
                 {/if}
             </div>
             <div>

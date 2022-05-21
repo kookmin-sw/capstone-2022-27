@@ -17,6 +17,8 @@
         isfirst = localStorage.getItem('isfirst')
         if(isfirst=='true'){
             goto('/first')
+        } else if (isfirst != 'false') {
+            goto('/login')
         }
     })
     

@@ -12,9 +12,9 @@ let shortContent = content.length > maxCharacters ? content.substring(0, maxChar
         <div class='img'>
             {#if shortContent.length != content.length}
                 {#if opened}
-                    <img src="../static/top_arrow.svg" on:click="{e=> opened = !opened }" alt=''/>
+                    <img src="/top_arrow.svg" on:click="{e=> opened = !opened }" alt=''/>
                 {:else}
-                    <img src="../static/bottom_arrow.svg" on:click="{e=> opened = !opened}" alt=''/>
+                    <img src="/bottom_arrow.svg" on:click="{e=> opened = !opened}" alt=''/>
                 {/if}
             {/if}
         </div>

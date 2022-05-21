@@ -38,29 +38,42 @@
   <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Rubik:400,700'>
 </svelte:head>
 
-<div class="login-form">
-  <h1>Login</h1>
-  <div class="content">
-    <div class="input-field">
-      <input type="text" placeholder="username" autocomplete="nope" bind:value="{username}">
+<div class="container">
+  <div class="login-form">
+    <h1>Login</h1>
+    <div class="content">
+      <div class="input-field">
+        <input type="text" placeholder="username" autocomplete="nope" bind:value="{username}">
+      </div>
+      <div class="input-field">
+        <input type="password" placeholder="Password" autocomplete="new-password" bind:value="{password}">
+      </div>
+      {#if loginFailed}
+        <div class="error">{errorMsg}</div>
+      {/if}
+      
+      <div class="error"></div>
     </div>
-    <div class="input-field">
-      <input type="password" placeholder="Password" autocomplete="new-password" bind:value="{password}">
+    <div class="action">
+      <button on:click="{registerClick}">Register</button>
+      <button on:click="{signinClick}">Sign in</button>
     </div>
-    {#if loginFailed}
-      <div class="error">{errorMsg}</div>
-    {/if}
-    
-    <div class="error"></div>
-  </div>
-  <div class="action">
-    <button on:click="{registerClick}">Register</button>
-    <button on:click="{signinClick}">Sign in</button>
   </div>
 </div>
 
 
+
 <style>
+
+  .container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+  }
    * {
   margin: 0;
   padding: 0;

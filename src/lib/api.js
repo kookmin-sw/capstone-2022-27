@@ -5,7 +5,7 @@ import { stores_TOKEN } from './stores.js'
 const BASEURL = import.meta.env.VITE_API_URL+"api/"
 // const token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6Im5veWUxIiwiaWQiOjE0NzI2NDgzfQ.YHU6KxEIE1ndzBNdbP4-j7Rt4Uzf1QWgMZnDrwdvhtA"
 const token = function() {
-    return localStorage.getItem("token")
+    return localStorage.getItem("token") || ''
 }
 
 const safe_return = async (promise) => {
@@ -273,7 +273,7 @@ const mainBannerMockup = async () => {
             textColor:'#FFFFFF',
         },
         {
-            id: 826,
+            id: 8696,
             image: 'http://bookthumb.phinf.naver.net/cover/090/537/09053751.jpg',
             title: '오베라는 남자',
             author: '김호연',
