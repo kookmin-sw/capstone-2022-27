@@ -59,7 +59,7 @@
                     {#await profileInit};
                     {:then profile} 
                         <div class="circle "></div>
-                        <div class='username'>{_nickname}</div>
+                        <div class='username' on:click={() => {goto('/myreviews')}}>{_nickname}</div>
                         <div class="logout" on:click={logout}>로그아웃</div>
                     {/await}
                 </div>
@@ -148,6 +148,9 @@
         margin: -0.1rem .3rem 0 0;
         border-radius: 50%;
         background-color: #FFB4E6;
+    }
+    .username {
+        cursor: pointer;
     }
     .vertical-center-parent {
         display: flex;

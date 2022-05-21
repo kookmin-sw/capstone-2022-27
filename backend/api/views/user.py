@@ -1,9 +1,10 @@
 from .api import res, api, P
 from django.db.models import F, Count
 from ..models import User
-from ..serializer import SimpleSerializer, AccountSerializer
+from ..serializer import SimpleSerializer, AccountSerializer, ReviewDetailSerializer
 from argon2 import PasswordHasher
 from .core import get_data, post_data
+from ..models import Review
 import jwt, os
 
 SECRET = os.getenv('DJANGO_SECRET_KEY')
@@ -69,6 +70,28 @@ def login(req, username:str, password:str):
             'is_first': user.reviews.count() == 0,
             'nickname': user.nickname,
         }).data)
+    except Exception as e:
+        print(e)
+        return res(code=1)
+
+# 내 리뷰 목록
+@api(
+    name="내 리뷰",
+    method='GET',
+    params=[],
+    response=ReviewDetailSerializer(many=True),
+    errors={
+        1: '알 수 없는 에러',
+    },
+    auth=True
+)
+def my_reviews(req, token):
+    try:
+        user = User.objects.get(id=token['id'])
+    except:
+        return res(code=2, msg='토큰 에러')
+    try:
+        return res([ReviewDetailSerializer.from_model(review).data for review in user.reviews.order_by('-created_at').all()])
     except Exception as e:
         print(e)
         return res(code=1)

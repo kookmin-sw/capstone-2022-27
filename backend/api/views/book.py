@@ -81,7 +81,7 @@ def review_pages(req, id:int, page):
     all_reviews = Review.objects.filter(book=book, content__isnull=False).exclude(content__exact='')
     for review in all_reviews.order_by('-created_at')[page*3:(page+1)*3]:
         reviews.append({
-            'user_name': review.user.username if review.user.booka else gen(review.user.id),
+            'user_name': review.user.nickname if review.user.booka else gen(review.user.id),
             'read_state': review.read_state,
             'score': review.score,
             'created_at': review.created_at,
@@ -204,7 +204,7 @@ def recommend(req, recom_type, token):
     except:
         return res(code=2, msg='토큰 에러')
     try:
-        read_books = set(Review.objects.filter(user=user, read_state='읽었어요').prefetch_related('book').values_list('book', flat=True))
+        read_books = set(Review.objects.filter(user=user, read_state='읽었어요').prefetch_related('book').values_list('book', flat=True)) | {23948, 75937, 212105}
         def read_id_filter(books):
             return list(filter(lambda x: x[0] not in read_books, books))
         def read_filter(books):

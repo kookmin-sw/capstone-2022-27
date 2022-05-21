@@ -34,6 +34,30 @@ class BookSimpleSerializer(serializers.ModelSerializer):
         model = Book
         fields = ('id', 'image', 'title', 'subtitle', 'isbn', 'author', 'publisher', 'pubdate', 'keywords')
         read_only_fields = ('id',)
+        
+class ReviewDetailSerializer(serializers.ModelSerializer):
+    book = BookSimpleSerializer()
+    user_name = serializers.CharField()
+    read_state = serializers.CharField()
+    score = serializers.IntegerField()
+    created_at = serializers.DateTimeField()
+    content = serializers.CharField()
+    
+    class Meta:
+        model = Review
+        fields = ('id', 'book', 'user_name', 'read_state', 'score', 'created_at', 'content')
+        read_only_fields = ('id',)
+    
+    @classmethod
+    def from_model(cls, review: Review):
+        return cls(dict(
+            book=BookSimpleSerializer(review.book).data,
+            user_name=review.user.nickname,
+            read_state=review.read_state,
+            score=review.score,
+            created_at=review.created_at,
+            content=review.content
+        ))
 
 class BookDetailSerializer(serializers.Serializer):
     book = BookSerializer()

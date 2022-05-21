@@ -5,6 +5,7 @@ from .views import base, book, user
 urlpatterns = [
     path('user/register/', user.register),
     path('user/login/', user.login),
+    path('user/reviews/', user.my_reviews),
     
     path('book/detail/<int:id>', book.detail),
     path('book/review_pages/<int:id>/<int:page>', book.review_pages),
