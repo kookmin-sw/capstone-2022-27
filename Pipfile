@@ -20,6 +20,8 @@ flask = "*"
 numpy = "*"
 tqdm = "*"
 pyjwt = "*"
+uvicorn = "*"
+gunicorn = "*"
 
 [dev-packages]
 
