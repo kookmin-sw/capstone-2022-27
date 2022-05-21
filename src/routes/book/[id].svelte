@@ -437,6 +437,7 @@
     content: "\f005 "; /* full star */
     
     font-size: 16px;
+    padding-top: 0.1rem;
 }
 
 /* Half star trick */
@@ -446,6 +447,7 @@
     /* padding-right: 0; */
 
     font-size: 16px;
+    padding-top: 0.1rem;
 }
 
 label {
