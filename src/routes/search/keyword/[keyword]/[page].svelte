@@ -5,7 +5,7 @@
     import { goto } from '$app/navigation';
     import Loading from '$lib/components/Loading.svelte';
 
-    export let buttons = [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5];
+    export let buttons = [-4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
     let keyword = $page.params.keyword
     const pageNum = 10
     
@@ -50,7 +50,7 @@
                         
                         <button
                             class:active={currentPage === currentPage + button}
-                            on:click={e => goto(`/search/${keyword}/${currentPage + button}`)}>
+                            on:click={e => goto(`/search/keyword/${keyword}/${currentPage + button}`)}>
                             {currentPage + button + 1}
                         </button>
 

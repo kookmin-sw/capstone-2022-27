@@ -10,25 +10,36 @@
     import BookList from '$lib/components/BookList.svelte';
     import Loading from '$lib/components/Loading.svelte';
     import {onMount} from 'svelte';
-import { mount_component } from 'svelte/internal';
 
     let id = $page.params.id
     let loaded=false;
     let book, reviews, num_review
     let reviewpage = 0
+    let randkey = Math.random()
+
+    let rating = 0;
+    const ratings = [10 , 9 , 8 , 7 , 6 , 5 , 4 , 3 , 2 , 1]
+    let myreview = ''
+    let read_state = ''
 
     async function mount () {
         loaded = false
         bookDetail(id).then(res=> {
             book = res
             reviews = book.reviews
+            if (book.my_review) {
+                myreview = book.my_review.content
+                rating = book.my_review.score
+                read_state = book.my_review.read_state
+            } else {
+                myreview = ''
+                rating = 0
+                read_state = ''
+            }
+
             num_review = book.book.num_review
-            console.log(num_review)
-            reviewContent=''
             reviewpage = 0
-            rating = 0
             randkey = Math.random()
-            ratings = [10 , 9 , 8 , 7 , 6 , 5 , 4 , 3 , 2 , 1]
             loaded = true
         }).catch(err=>{})
     }
@@ -44,18 +55,14 @@ import { mount_component } from 'svelte/internal';
             reviews = reviews.concat(res)
         })
     }
-    
-    let reviewContent=''
 
     $: reviews
-    let rating = 0; let randkey = Math.random()
-
-    let ratings = [10 , 9 , 8 , 7 , 6 , 5 , 4 , 3 , 2 , 1]
     
     async function writeReviewClicked(){
-        let res = await writeReview(id, '읽었어요', rating,reviewContent)
+        console.log(rating)
+        let res = await writeReview(id, '읽었어요', rating, myreview)
         loadReviews(0)
-        reviewContent=''
+        myreview=''
     }
 
     $: {
@@ -85,12 +92,8 @@ import { mount_component } from 'svelte/internal';
                         {/each}
                     </div>
                     <div class='col button_container'>
-                        {#if book.my_review == null}
-                            <BookStatusBtn book_id={book.book.id} status='' content=''/>
-                        {:else}
-                            <BookStatusBtn book_id={book.book.id} status={book.my_review.read_state}
-                                rating={book.my_review.score} content={book.my_review.content}/>
-                        {/if}
+                        <BookStatusBtn book_id={id} status={read_state}
+                            rating={rating} content={myreview}/>
                     </div>
 
                 </div>
@@ -119,7 +122,7 @@ import { mount_component } from 'svelte/internal';
                 <div class='col'>
                     <div class="circle"></div>
                     <div id='profile-wrapper'>
-                        <div class="col">
+                        <div class="col" >
                             <div id='my-rating-title'>나의 별점</div>
                             <fieldset class="rate">
                                 {#each ratings as r}
@@ -129,12 +132,12 @@ import { mount_component } from 'svelte/internal';
                             </fieldset>
                         </div>
                         <textarea id='write-review' placeholder="리뷰를 남겨주세요"
-                        bind:value={reviewContent}/>
+                        bind:value={myreview}/>
                     </div>
                 </div>
                 <div class='right'>
-                    <div id='review-word-count'>{reviewContent.length}/10000</div>
-                    <div id='review-btn' class={reviewContent.length && rating!=0?'filled':''} on:click='{() => {if (reviewContent.length && rating!=0) {writeReviewClicked()}}}'><p>리뷰 등록</p></div>
+                    <div id='review-word-count'>{myreview.length}/10000</div>
+                    <div id='review-btn' class={myreview.length && rating!=0?'filled':''} on:click='{() => {if (myreview.length && rating!=0) {writeReviewClicked()}}}'><p>리뷰 등록</p></div>
                 </div>
             </div>
             <div class='similar'>

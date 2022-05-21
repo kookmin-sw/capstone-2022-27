@@ -7,27 +7,26 @@
     import { getBanners, mainBannerMockup, mainpage } from '../lib/api'
     import { stores_first } from '../lib/stores.js'
     import { onMount } from 'svelte'
-    let recom_types = [0,1,2,3,4]
+    let recom_types = [0, 5, 6, 1, 4, 3, 2]
 
     let recoms = []
     let loaded = false
 
     let isfirst
-    stores_first.subscribe(value => {
-        isfirst = value;
-    });
+    onMount(async () => {
+        isfirst = localStorage.getItem('isfirst')
+        if(isfirst=='true'){
+            goto('/first')
+        }
+    })
     
-    console.log(isfirst)
-    if(isfirst=='true'){
-        console.log(isfirst)
-        goto('/first')
-    }
     
     const initBanner=  mainBannerMockup()
 
     onMount(async () => {
         let futures = recom_types.map(type => mainpage(type))
         Promise.all(futures).then(values => {
+            console.log(recoms)
             recoms = values
             loaded = true
         })
@@ -36,7 +35,7 @@
 
 <div class="content">    
     {#await initBanner}
-        <p>loading..</p>
+        <div></div>
     {:then banner}
         <Banner banners={banner} />
     {/await}
@@ -53,7 +52,9 @@
                     <hr style="border: solid 1px #66686B">
                     
                     {#each recoms as recom}
+                        {#if recom.title != ''}
                         <div class='recomlist'><RecomList recom={recom}/></div>
+                        {/if}
                     {/each}
                     
                 </div>

@@ -1,5 +1,6 @@
 <script>
 import { goto } from '$app/navigation';
+import Loading from '$lib/components/Loading.svelte';
 
     import { getFristPageList, setFristPageList } from '../lib/api'
     import { stores_TOKEN, stores_nickname, stores_first } from '../lib/stores.js'
@@ -21,7 +22,8 @@ import { goto } from '$app/navigation';
             }
         }
         await setFristPageList(JSON.stringify(selectedBooks))
-        stores_first.update(x => 'true')
+        stores_first.update(x => 'false')
+        localStorage.setItem('isfirst', 'false')
         goto('/')
     }
 </script>
@@ -31,7 +33,7 @@ import { goto } from '$app/navigation';
         <hr style="borderr:solid 1px #26282B">
     </div>
     {#if !loaded}
-        Loading....
+        <Loading></Loading>
     {:else} 
         <div class='container'>
         {#each books as book}

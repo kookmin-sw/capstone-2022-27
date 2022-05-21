@@ -19,6 +19,10 @@
         console.log(rating)
         const res = await writeReview(book_id, status, rating, content)
     }
+
+    async function changeStar(e){
+        let res = await writeReview(book_id, '읽었어요', Number(e.target.value), content)
+    }
     
 </script>
 <div class='container'>
@@ -56,7 +60,7 @@
             </div>
             <fieldset class="rate">
                 {#each ratings as r}
-                    <input type="radio" id="rand{randkey}{r}" disabled={!enabled} bind:group={rating} name="rand{randkey}" value="{r}" />
+                    <input on:change={changeStar} type="radio" id="rand{randkey}{r}" disabled={!enabled} bind:group={rating} name="rand{randkey}" value="{r}" />
                     <label for="rand{randkey}{r}" class="{r%2==1?'half':''} {enabled?'enabled':'disabled'}"></label>
                 {/each}
             </fieldset>

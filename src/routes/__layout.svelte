@@ -38,7 +38,10 @@
     };
     
 </script>
-
+<svelte:head>
+    <title>Booka</title>
+    <link rel="icon" type="image/svg" href={'/favicon.ico'} />
+</svelte:head>
 <nav class='container'>
     <div class='col'></div>
     <div class='col space-between' >

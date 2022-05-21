@@ -156,7 +156,10 @@ def firstpage(req, selected_books, token):
         return res(code=2, msg='토큰 에러')
     try:   
         selected_books = json.loads(selected_books)
-        as_a = post_data(f'cossim/makeasa/{token["id"]}', selected_books)
+        if len(selected_books) == 0:
+            as_a = 61367
+        else:
+            as_a = post_data(f'cossim/makeasa/{token["id"]}', selected_books)
         user.as_a = as_a
         user.save()
         for book_id in selected_books:
@@ -177,7 +180,7 @@ def firstpage(req, selected_books, token):
 )
 def firstpage_list(req):
     try:
-        data = BookSimpleSerializer(Book.objects.order_by('-num_review')[:50], many=True).data
+        data = BookSimpleSerializer(Book.objects.order_by('-num_review')[:100], many=True).data
         return res(data)
     except:
         return res(code=1, msg='알 수 없는 에러')
@@ -246,19 +249,57 @@ def recommend(req, recom_type, token):
             return res(line)
         elif recom_type == 4:
             book = Review.objects.filter(user=user).order_by('?')[:1].select_related('book').get().book
-            print(book.title)
             keyword = book.keywords.all()[0]
-            print(keyword)
-            # random.shuffle(books)
+            
             line = BookLineSerializer({
-                'title': f'#{keyword}',
+                'title': f' #{keyword}',
+                'books': read_filter(BookSimpleSerializer(Book.objects.filter(keywords__keyword=keyword).order_by('-num_review')[:30], many=True).data)
+            }).data
+            return res(line)
+        elif recom_type == 5: # 키워드 붙는 애들
+            # 장르: 장르 설명
+            mapping = {
+                '판타지': '상상 속 세상',
+                '스타트업': '이제 막 창업하려는 당신에게',
+                '추리소설': '진실은 언제나 하나',
+                '여행': '떠나볼까요?',
+                '로맨스': '두근거림이 필요할 때',
+                '문학상': '믿고 읽는',
+                '소프트웨어': '세상을 바꾸는',
+            }
+            keyword = random.choice(list(mapping.keys()))
+            msg = mapping[keyword]
+            print(keyword, msg)
+            line = BookLineSerializer({
+                'title': f'{msg} #{keyword}',
+                'books': read_filter(BookSimpleSerializer(Book.objects.filter(keywords__keyword=keyword).order_by('-num_review')[:30], many=True).data)
+            }).data
+            return res(line)
+        elif recom_type == 6: # 키워드 안붙는 애들
+            # 장르: 장르 설명
+            mapping = {
+                '장편소설': '밤에 읽기 좋은 소설',
+                '고양이': '이것도 읽어보라냥!',
+                '과학': '세상을 밝히는 힘, 과학',
+                '애니메이션': '영상의 감동을 글로 느껴보세요',
+                '실리콘밸리': '실리콘밸리에 가고 싶은 당신에게',
+                '우울': '나를 돌보는 법을 잊어버린 당신에게',
+            }
+            keyword = random.choice(list(mapping.keys()))
+            msg = mapping[keyword]
+            print(keyword, msg)
+            line = BookLineSerializer({
+                'title': f'{msg}',
                 'books': read_filter(BookSimpleSerializer(Book.objects.filter(keywords__keyword=keyword).order_by('-num_review')[:30], many=True).data)
             }).data
             return res(line)
         return res(code=4, msg='알 수 없는 추천 종류')
     except Exception as e:
         print(e)
-        return res(code=1)
+        return res(BookLineSerializer({
+                'title': '',
+                'books': []
+            }).data)
 
 @api(
     name="리뷰 작성",
@@ -276,6 +317,7 @@ def recommend(req, recom_type, token):
     auth=True
 )
 def review(req, book_id, state, content, score, token):
+    print(book_id, state, content, score, token)
     try:
         user = User.objects.get(id=token['id'])
     except:
@@ -287,12 +329,18 @@ def review(req, book_id, state, content, score, token):
         except:
             my_review = None
         if my_review:
-            my_review.read_state = state
-            my_review.content = content if state == '읽었어요' else ''
-            my_review.score = score if state == '읽었어요' else 0
-            my_review.save()
+            if state == '':
+                my_review.delete()
+            else: 
+                my_review.read_state = state
+                my_review.content = content if state == '읽었어요' else ''
+                my_review.score = score if state == '읽었어요' else 0
+                my_review.save()
         else:
-            Review(book=book, user=user, read_state=state, score=score, content=content).save()
+            if len(content):
+                Review(book=book, user=user, read_state=state, score=score, content=content).save()
+            else:
+                Review(book=book, user=user, read_state=state, score=score).save()
         return res()
     except Exception as e:
         print(e)

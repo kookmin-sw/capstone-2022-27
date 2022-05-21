@@ -10,7 +10,7 @@ urlpatterns = [
     path('book/review_pages/<int:id>/<int:page>', book.review_pages),
     path('book/search_keyword/<keyword>/<int:page>', book.search_keyword),
     path('book/search/<keyword>/<int:page>', book.search),
-    path('book/firstpage/', book.firstpage),
+    path('book/firstpage', book.firstpage),
     path('book/firstpage_list/', book.firstpage_list),
     path('book/review/', book.review),
     path('book/recommend/<int:recom_type>', book.recommend),
