@@ -1,6 +1,4 @@
-# Booka
-
-임시 설명 md입니다.
+# Booka Setup
 
 ## 개발환경 세팅 방법
 
