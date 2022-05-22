@@ -1,58 +1,43 @@
-# Booka
+# 📚 BOOKA
+어떤 책을 읽으실지 고민되나요? 🤔 **BOOKA에서 추천**받아보세요!
 
-임시 설명 md입니다.
+## 📕 프로젝트 소개
+유튜브, 넷플릭스 등 OTT서비스의 이용률이 늘어나는데 반해 독서인구는 점점 줄고 있습니다. 독서의 필요성을 느끼는 사람은 많지만 어떤 책을 읽을지 막막해 독서를 시작하지 못하는 경우가 많습니다. 효과적인 추천을 해 줄 수 있다면 독서를 시작하려는 사람들이 책을 선택하는 것을 도울 수 있을 것입니다.
 
-## 개발환경 세팅 방법
+빅데이터를 이용해 **취향에 맞는 책**을 추천하거나 독서 편식을 막기 위한 **새로운 분야의 책**을 추천하여 이 문제를 해결하려 합니다.
 
-필요: `npm`와 `nodejs`, `pipenv`와 `python`
+BOOKA에서는 KeyBERT를 활용한 **도서 키워드 추출**과 LightGCN을 통한 **평점 예측**을 이용해, 다방면으로 유저에게 도서를 추천하거나 찾을 수 있도록 돕습니다.
 
-```sh
-git clone https://github.com/kookmin-sw/capstone-2022-27
-cd capstone-2022-27
-git checkout <branch> // 원하는 브랜치
-pipenv shell // pipenv 가상환경 진입
-pipenv install // pip 패키지 설치
-npm i // npm 패키지 설치
-```
+## 📙 Abstract
+While the utilization rate of OTT services such as YouTube and Netflix is increasing, the reading population is gradually decreasing. Many people feel the need to read, but they often can't start reading because they don't know which book to read. An effective recommendation would help people who want to start reading choose a book.
 
-## 개발서버 실행 방법
+I'd like to recommend **books that suit your taste using big data** or books in a new field to prevent you from being picky about reading.
 
-```sh
-// 터미널 1: 서버
-pipenv shell
-npm run server
-// 터미널 2: 클라이언트
-npm run dev
-// 터미널 3: 코어
-pipenv shell
-cd core
-python3 server.py
-```
+BOOKA helps users to recommend or find books in various ways by **extracting book keywords** using KeyBERT and **predicting ratings** through LightGCN.
 
-## 개발문서 확인 방법
+## 🎬 소개 영상
+[![예제](http://img.youtube.com/vi/tYg9JI-IT4w/0.jpg)](https://www.youtube.com/watch?v=tYg9JI-IT4w) 
 
-swagger를 이용함
-서버가 실행된 상태에서 [브라우저로 접속](http://127.0.0.1:3001/swagger/)
+## 🎬 시연 영상
+WIP
 
-## 컨벤션
+## 📖 BOOKA
+![메인](pages/img/main.png)
 
-### 프론트
+<hr>
 
-```svelte
-<ul>
-    <li>indent: 4 space</li>
-    <li>html, script, style 순서로 배치하기</li>
-    <li>각 부분 사이에 한 줄 공백 넣기, script와 style은 1 indent</li>
-</ul>
+![검색](pages/img/search.png)
 
-<script>
-    let var1 = "let, const 등 ecmascript 사용"
-    const var2 = "세미콜론 사용하지 않기"
-</script>
 
-<style>
-    div {
-        color: red;
-    }
-</style>
-```
+## 📎 설치
+[SETUP](https://github.com/kookmin-sw/capstone-2022-27/blob/master/SETUP.md)를 참고해주세요!
+
+
+## 🧑‍💻👩🏼‍💻 팀원소개
+
+|👑 한창훈|김유진|홍석진|
+|-------|----|-----|
+|[![Github link](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/codingnoye)|[![Github link](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Erica1217)|[![Github link](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://zziny-mago.github.io/)|
+|****1688|****1567|****3416|
+|<img src="pages/img/창훈.png" width="200" height="300"/> | <img src="pages/img/%EC%9C%A0%EC%A7%84.png" width="200" height="300"/>|<img src="pages/img/석진.png" width="200" height="300"/>|
+|팀장, DB구축, 서버 개발|웹 프론트, 안드로이드 앱 개발|추천 모델 개발|

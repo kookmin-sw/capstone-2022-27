@@ -6,7 +6,13 @@ const config = {
 		adapter: adapter({
 			out: 'dist',
 		}),
-		vite: () => ({})
+		vite: () => ({
+			server: {
+				fs: {
+					allow: ['..']
+				}
+			}
+		})
 	}
 }
 

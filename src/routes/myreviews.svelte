@@ -7,7 +7,7 @@
     import Review from '$lib/components/Review.svelte';
     import Rating from '$lib/components/Rating.svelte';
     import { onMount } from 'svelte';
-    import RecomList from '$lib/components/recomlist.svelte';
+    import RecomList from '$lib/components/RecomList.svelte';
 
     let isloaded=false
 
