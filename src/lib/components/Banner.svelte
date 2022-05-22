@@ -11,7 +11,7 @@ let flicking= Flicking;
 
 setInterval(() => {
     flicking.next();
-}, 3000);
+}, 5500);
 
 </script>
 

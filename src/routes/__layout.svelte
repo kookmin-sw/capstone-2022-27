@@ -40,7 +40,7 @@ import { onMount } from 'svelte';
         localStorage.setItem('token', '')
         localStorage.setItem('nickname', '')
         localStorage.setItem('isfirst', '')
-        goto('login')
+        goto('/login')
     }
 
     const onKeyPress = e => {

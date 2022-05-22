@@ -31,7 +31,9 @@
     function registerClick(){
       goto(`/register`)
     }
-
+    const onKeyPress = e => {
+        if (e.charCode === 13) signinClick() // 13 : enterKey
+    };
 </script>
 
 <svelte:head>
@@ -39,6 +41,7 @@
 </svelte:head>
 
 <div class="container">
+  <div class="container-image"></div>
   <div class="login-form">
     <h1>Login</h1>
     <div class="content">
@@ -46,7 +49,7 @@
         <input type="text" placeholder="username" autocomplete="nope" bind:value="{username}">
       </div>
       <div class="input-field">
-        <input type="password" placeholder="Password" autocomplete="new-password" bind:value="{password}">
+        <input type="password" on:keypress="{onKeyPress}" placeholder="Password" autocomplete="new-password" bind:value="{password}">
       </div>
       {#if loginFailed}
         <div class="error">{errorMsg}</div>
@@ -66,13 +69,21 @@
 <style>
 
   .container {
+    position: relative;
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    min-height: 80vh;
+    min-height: 90vh;
+    margin-bottom: -5rem;
+  }
+  .container-image {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
   }
    * {
   margin: 0;
@@ -83,6 +94,7 @@
 
 
 .login-form {
+  z-index: 1;
   background: #fff;
   width: 500px;
   margin: 65px auto;
