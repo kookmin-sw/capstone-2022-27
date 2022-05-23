@@ -15,10 +15,8 @@ I'd like to recommend **books that suit your taste using big data** or books in 
 
 BOOKA helps users to recommend or find books in various ways by **extracting book keywords** using KeyBERT and **predicting ratings** through LightGCN.
 
-## 🎬 소개 영상
-[![예제](http://img.youtube.com/vi/tYg9JI-IT4w/0.jpg)](https://www.youtube.com/watch?v=tYg9JI-IT4w) 
-
 ## 🎬 시연 영상
+(클릭하시면 YouTube로 이동합니다)
 [![예제](http://img.youtube.com/vi/1YVCP95qjg0/0.jpg)](https://www.youtube.com/watch?v=1YVCP95qjg0) 
 
 ## 📖 BOOKA
@@ -28,10 +26,8 @@ BOOKA helps users to recommend or find books in various ways by **extracting boo
 
 ![검색](pages/img/search.png)
 
-
 ## 📎 설치
 [SETUP](https://github.com/kookmin-sw/capstone-2022-27/blob/master/SETUP.md)를 참고해주세요!
-
 
 ## 🧑‍💻👩🏼‍💻 팀원소개
 
