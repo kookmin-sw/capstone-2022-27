@@ -15,6 +15,10 @@ I'd like to recommend **books that suit your taste using big data** or books in 
 
 BOOKA helps users to recommend or find books in various ways by **extracting book keywords** using KeyBERT and **predicting ratings** through LightGCN.
 
+## 💻 사용해 보기
+![BOOKA](/pages/img/booka.svg)
+[http://booka.noye.work](http://booka.noye.work)
+
 ## 🎬 시연 영상
 (클릭하시면 YouTube로 이동합니다)
 
