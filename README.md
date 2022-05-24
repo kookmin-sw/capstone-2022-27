@@ -24,7 +24,12 @@ BOOKA helps users to recommend or find books in various ways by **extracting boo
 ## 🎬 시연 영상
 (클릭하시면 YouTube로 이동합니다)
 
-[![예제](http://img.youtube.com/vi/1YVCP95qjg0/0.jpg)](https://www.youtube.com/watch?v=1YVCP95qjg0) 
+[![시연 영상](http://img.youtube.com/vi/1YVCP95qjg0/0.jpg)](https://www.youtube.com/watch?v=1YVCP95qjg0) 
+
+## 🎬 소개 영상
+(클릭하시면 YouTube로 이동합니다)
+
+[![소개 영상](http://img.youtube.com/vi/tYg9JI-IT4w/0.jpg)](https://www.youtube.com/watch?v=tYg9JI-IT4w) 
 
 ## 📖 BOOKA
 ![메인](pages/img/main.png)
